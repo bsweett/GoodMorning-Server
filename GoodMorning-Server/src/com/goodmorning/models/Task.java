@@ -4,25 +4,29 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import com.goodmorning.enums.AlertType;
+import com.goodmorning.enums.RepeatType;
 import com.goodmorning.enums.TaskType;
 
 public class Task {
 	
 	private String taskId;
 	private Timestamp creationTimestamp;
+	private Timestamp nextAlertTimestamp;
 	private TaskType taskType;
-	private TaskHandler taskHandler;
 	private Time alertTime;
-	private boolean repeatDaily;
-	private boolean repeatWeekly;
+	private AlertType alertType;
+	private RepeatType repeatType;
+	private User user;
 	
+	// TODO: Set TaskHandler on client side
 	public Task() {
 		Calendar now = Calendar.getInstance();
 		setCreationTimestamp(new Timestamp(now.getTimeInMillis()));
+		setNextAlertTimestamp(new Timestamp(now.getTimeInMillis()));
 		setTaskType(TaskType.UNKNOWN);
-		setTaskHandler(null);
-		setRepeatDaily(false);
-		setRepeatWeekly(false);
+		setAlertType(AlertType.NONE);
+		setRepeatType(RepeatType.NONE);
 	}
 	
 	public String getTaskId() {
@@ -49,14 +53,6 @@ public class Task {
 		this.taskType = taskType;
 	}
 
-	public TaskHandler getTaskHandler() {
-		return taskHandler;
-	}
-
-	public void setTaskHandler(TaskHandler taskHandler) {
-		this.taskHandler = taskHandler;
-	}
-
 	public Time getAlertTimestamp() {
 		return alertTime;
 	}
@@ -64,24 +60,40 @@ public class Task {
 	public void setAlertTimestamp(Time alertTime) {
 		this.alertTime = alertTime;
 	}
-
-	public boolean isRepeatDaily() {
-		return repeatDaily;
-	}
-
-	public void setRepeatDaily(boolean repeatDaily) {
-		this.repeatDaily = repeatDaily;
-	}
-
-	public boolean isRepeatWeekly() {
-		return repeatWeekly;
-	}
-
-	public void setRepeatWeekly(boolean repeatWeekly) {
-		this.repeatWeekly = repeatWeekly;
-	}
 	
 	public boolean equals(Task task) {
 		return getTaskId().equals(task.getTaskId());
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public AlertType getAlertType() {
+		return alertType;
+	}
+
+	public void setAlertType(AlertType alertType) {
+		this.alertType = alertType;
+	}
+
+	public RepeatType getRepeatType() {
+		return repeatType;
+	}
+
+	public void setRepeatType(RepeatType repeatType) {
+		this.repeatType = repeatType;
+	}
+
+	public Timestamp getNextAlertTimestamp() {
+		return nextAlertTimestamp;
+	}
+
+	public void setNextAlertTimestamp(Timestamp nextAlertTimestamp) {
+		this.nextAlertTimestamp = nextAlertTimestamp;
 	}
 }

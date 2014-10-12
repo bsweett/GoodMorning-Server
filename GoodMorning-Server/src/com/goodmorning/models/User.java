@@ -1,10 +1,8 @@
 package com.goodmorning.models;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.goodmorning.util.Messages;
@@ -17,7 +15,7 @@ public class User {
 	private Timestamp creationDate;
 	private Timestamp lastActive;
 	
-	private List<RSSFeed> rssFeeds = new ArrayList<RSSFeed>();
+	private Set<RSSFeed> rssFeeds = new HashSet<RSSFeed>(0);
 	
 	private Set<Task> taskSet = new HashSet<Task>(0);
 	
@@ -77,11 +75,11 @@ public class User {
 		this.nickname = nickname;
 	}
 
-	public List<RSSFeed> getRssFeeds() {
+	public Set<RSSFeed> getRssFeeds() {
 		return rssFeeds;
 	}
 
-	public void setRssFeeds(List<RSSFeed> rssFeeds) {
+	public void setRssFeeds(Set<RSSFeed> rssFeeds) {
 		this.rssFeeds = rssFeeds;
 	}
 	
