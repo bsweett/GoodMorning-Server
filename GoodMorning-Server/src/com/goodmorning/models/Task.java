@@ -1,12 +1,22 @@
 package com.goodmorning.models;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import com.goodmorning.database.DatabaseEncryptionManager;
 import com.goodmorning.enums.AlertType;
 import com.goodmorning.enums.RepeatType;
 import com.goodmorning.enums.TaskType;
+import com.goodmorning.util.Messages;
 
 public class Task {
 	
@@ -17,6 +27,7 @@ public class Task {
 	private Time alertTime;
 	private AlertType alertType;
 	private RepeatType repeatType;
+	private String Notes;
 	private User user;
 	
 	// TODO: Set TaskHandler on client side
@@ -27,6 +38,7 @@ public class Task {
 		setTaskType(TaskType.UNKNOWN);
 		setAlertType(AlertType.NONE);
 		setRepeatType(RepeatType.NONE);
+		setNotes(Messages.UNKNOWN);
 	}
 	
 	public String getTaskId() {
@@ -95,5 +107,42 @@ public class Task {
 
 	public void setNextAlertTimestamp(Timestamp nextAlertTimestamp) {
 		this.nextAlertTimestamp = nextAlertTimestamp;
+	}
+
+	public String getNotes() {
+		return Notes;
+	}
+
+	public void setNotes(String notes) {
+		Notes = notes;
+	}
+	
+	public Task encryptData() {
+		try {
+			this.setNotes(DatabaseEncryptionManager.getInstance().encryptPlainText(this.getNotes()));
+			this.setTaskId(DatabaseEncryptionManager.getInstance().encryptPlainText(this.getTaskId()));
+		} catch (InvalidKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | InvalidAlgorithmParameterException
+				| UnsupportedEncodingException | IllegalBlockSizeException
+				| BadPaddingException e) {
+			// TODO: Handle exceptions
+			e.printStackTrace();
+		}
+		
+		return this;
+	}
+	
+	public Task decryptData() {
+		try {
+			this.setNotes(DatabaseEncryptionManager.getInstance().decryptCipherText(this.getNotes()));
+			this.setTaskId(DatabaseEncryptionManager.getInstance().decryptCipherText(this.getTaskId()));
+		} catch (InvalidKeyException | NoSuchAlgorithmException
+				| NoSuchPaddingException | InvalidAlgorithmParameterException
+				| UnsupportedEncodingException | IllegalBlockSizeException
+				| BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return this;
 	}
 }

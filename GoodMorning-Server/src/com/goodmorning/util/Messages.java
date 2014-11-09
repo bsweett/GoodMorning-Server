@@ -20,6 +20,14 @@ public class Messages {
 	public static final String METHOD_READFEED = "readfeed";
 	public static final String METHOD_READ = "read";
 	
+	public static final String METHOD_ADD_USER = "add_user";
+	public static final String METHOD_DELETE_USER = "delete_user";
+	public static final String METHOD_GET_USER_BY_TOKEN = "get_user_by_token";
+	public static final String METHOD_GET_USER_COUNT = "get_total_user_count";
+	
+	public static final String METHOD_CONVERT_CLEAR_TEXT = "convert_clear_text";
+	public static final String METHOD_CREATE_CIPHER = "create_cipher";
+	
 	public static final String RSSFEEDPARSER_FAILED = "rss feed parser failed";
 	
 	public static final String UNKNOWN = "UNKNOWN";
