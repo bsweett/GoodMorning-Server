@@ -35,7 +35,7 @@ public class HibernateUtility {
 				configuration.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
 				configuration.setProperty("hibernate.current_session_context_class", "thread");
 				configuration.setProperty("hibernate.connection.autocommit", "true"); */
-				configuration.configure("resources/hibernate.cfg.xml");
+				configuration.configure("com/goodmorning/resources/hibernate.cfg.xml");
 				standardServiceRegistryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 				serviceRegistry = standardServiceRegistryBuilder.build();
 				sessionFactory = configuration.buildSessionFactory(serviceRegistry);

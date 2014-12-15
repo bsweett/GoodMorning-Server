@@ -44,15 +44,6 @@
     		<key column="USER_ID_FK" not-null="true"/>
     		<one-to-many class="com.goodmorning.models.RSSFeed"/>
 		</set>
-		
-        <!--  Every user has many friends and every friend can also have many friends -->
-        
-		<set name="household" table="USER_HOUSEHOLD_USER" lazy="false" cascade="all">
-			<key column="USER_ID" />
-			<!-- Note that hibernate uses the primary key of following class/table get value for column, which in this case
-				happens to be another User-->
-			<many-to-many column="HOUSEHOLD_USER_ID"  class="com.goodmorning.models.User" />
-		</set>
     </class>
 
 </hibernate-mapping>

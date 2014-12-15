@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -19,6 +20,8 @@ import com.goodmorning.util.Messages;
 
 public class User {
 	
+	private static Logger LOGGER = Logger.getLogger(User.class.getName());
+	
 	private String userId;
 	private String deviceId;
 	private String userToken;
@@ -27,8 +30,6 @@ public class User {
 	private Timestamp lastActive;
 	
 	private Set<RSSFeed> rssFeeds = new HashSet<RSSFeed>(0);
-	
-	private Set<User> household = new HashSet<User>(0);
 	private Set<Task> taskSet = new HashSet<Task>(0);
 	
 	public User() {
@@ -94,17 +95,18 @@ public class User {
 	public void setRssFeeds(Set<RSSFeed> rssFeeds) {
 		this.rssFeeds = rssFeeds;
 	}
-
-	public Set<User> getHousehold() {
-		return household;
-	}
-
-	public void setHousehold(Set<User> household) {
-		this.household = household;
-	}
 	
-	public void addHouseMember(User user) {
-		getHousehold().add(user);
+	public boolean addRssFeed(RSSFeed feed) {
+		
+		try{
+			this.rssFeeds.add(feed);
+		} catch (Exception e) {
+			LOGGER.warning("Exception adding feed: " + e.getLocalizedMessage());
+			return false;
+		}
+		
+		return true;
+		
 	}
 	
 	public String getDeviceId() {

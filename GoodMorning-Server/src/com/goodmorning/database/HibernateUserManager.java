@@ -38,7 +38,7 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 	}
 	
 	@Override
-	boolean setupTable() {
+	public boolean setupTable() {
 		HibernateUtility.executeSQLQuery(DROP_USER_TABLE);
 		return HibernateUtility.executeSQLQuery(CREATE_USER_TABLE);
 	}

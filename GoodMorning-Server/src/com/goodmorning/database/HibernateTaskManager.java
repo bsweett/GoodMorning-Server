@@ -40,7 +40,7 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 	}
 	
 	@Override
-	boolean setupTable() {
+	public boolean setupTable() {
 		HibernateUtility.executeSQLQuery(DROP_TASK_TABLE);
 		return HibernateUtility.executeSQLQuery(CREATE_TASK_TABLE);
 	}

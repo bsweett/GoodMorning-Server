@@ -15,13 +15,13 @@
 			com.mysql.jdbc.Driver
 		</property>
 		<property name="hibernate.connection.url">
-			jdbc:mysql://localhost:3306/goodmorning-dev?autoReconnect=true
+			jdbc:mysql://localhost:3306/goodmorning_schema?autoReconnect=true
 		</property>
 		<property name="hibernate.connection.username">
 			admin-dev
 		</property>
 		<property name="hibernate.connection.password">
-			admin889
+			Dru_2053
 		</property>
 		<property name="hibernate.connection.autocommit">
 			true
