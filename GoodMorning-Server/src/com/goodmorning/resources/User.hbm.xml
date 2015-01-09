@@ -22,7 +22,10 @@
         </property>
         <property name="nickname">
             <column name="NICKNAME" sql-type="tinytext" not-null="true"/>
-        </property>                     
+        </property>     
+         <property name="email">
+            <column name="EMAIL" sql-type="tinytext" not-null="true"/>
+        </property>                 
         <property name="creationTimestamp" type="timestamp">
             <column name="CREATION_TIME" sql-type="timestamp" not-null="true" />
         </property>        

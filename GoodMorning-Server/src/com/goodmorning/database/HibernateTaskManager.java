@@ -1,5 +1,6 @@
 package com.goodmorning.database;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -7,7 +8,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Task;
+import com.goodmorning.models.User;
+import com.goodmorning.util.Messages;
+import com.goodmorning.util.ServerLogger;
 
 public class HibernateTaskManager extends HibernateDatabaseManager {
 
@@ -20,13 +25,10 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 			+ "REPEAT_TYPE enum('DAILY', 'WEEKLY', 'MONTHLY', 'NONE'), NOTES tinytext, USER_ID_FK char(36));";
 	
 	private final String TASK_CLASS_NAME = "Task";
-	//private final String SELECT_INBOX_WITH_RECEIVER_EMAIL = "from "
-	//		+ getClassName() + " as inbox where inbox.receiverEmail = :receiverEmail";
-	private final String SELECT_LIST_WITH_USERID = "from " + getClassName() + " as task where task.receiverEmail = :receiverEmail";
-	// TODO: How do I select the task table for the user?
-	/*
-	 * Consider having userId in task object.. or allow tasks to be sent to multiple users i.e. assigned to or something
-	 */
+	
+	private final String SELECT_TASK_WITH_TASKID = "from " + getClassName() + " as task where task.taskId = :taskId";
+	private final String SELECT_TASK_WITH_TIME_AND_TYPE = "from " + getClassName() + " as task where task.alertTime = :time and where task.repeatType = :type";
+	private final String SELECT_LIST_WITH_USERID = "from " + getClassName() + " as task where task.userId = :userId";
 	
 	HibernateTaskManager() {
 		super();
@@ -55,12 +57,73 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		return TASK_TABLE_NAME;
 	}
 	
-	//TODO: Exception and error handling
-	//TODO: Check relationship with
+	/**
+	 * Get an existing task by task id
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public synchronized Task getTaskById(String id) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = HibernateUtility.getCurrentSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(SELECT_TASK_WITH_TASKID);
+			query.setParameter("taskId", id);
+			List<Task> tasks = query.list();
+			transaction.commit();
+
+			if (tasks.isEmpty()) {
+				return null;
+			} else {
+				Task task = tasks.get(0);
+				return task;
+			}
+		} catch (HibernateException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_TASK_BY_TASKID, "error.getTaskByIdFromDatabase", exception);
+			return null;
+		} finally {
+			closeSession();
+		} 
+	}
+	
 	/*
 	@SuppressWarnings("unchecked")
-	public synchronized boolean add(Object object) 
-	{
+	public synchronized Task getTaskByTimeAndType(Timestamp time, TaskType type) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		
+		
+		try {
+			session = HibernateUtility.getCurrentSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(SELECT_TASK_WITH_TASKID);
+			query.setParameter("taskId", id);
+			List<Task> tasks = query.list();
+			transaction.commit();
+
+			if (tasks.isEmpty()) {
+				return null;
+			} else {
+				Task task = tasks.get(0);
+				return task;
+			}
+		} catch (HibernateException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_TASK_BY_TASKID, "error.getTaskByIdFromDatabase", exception);
+			return null;
+		} finally {
+			closeSession();
+		} 
+	}*/
+	
+	//TODO: Only add after a task of the same time within 60 seconds does not exist
+	@SuppressWarnings("unchecked")
+	public synchronized boolean add(Object object)  {
 		System.out.println("====== Beginnning to Add Task =======");
 		Transaction transaction = null;
 		Session session = null;
@@ -69,34 +132,28 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery(SELECT_INBOX_WITH_RECEIVER_EMAIL);
-		 	query.setParameter("receiverEmail", task.getUser().get);
+			Query query = session.createQuery(SELECT_LIST_WITH_USERID);
+		 	query.setParameter("userId", task.getUserId());
 			List<Task> taskList = query.list();
-			System.out.println("Testing");
 
 			if (!taskList.isEmpty()) {
-				System.out.println("Adding Reel to DB Failed\n");
+				System.out.println("Adding Task to DB Failed\n");
 				return false;
 			}
 			
 			session.save(task);
-			System.out.println("session save");
-			
 			transaction.commit();
 			System.out.println("Added Task to TaskList\n");
 			return true;
 
 		} catch (HibernateException exception) {
-			BookingLogger.getDefault().severe(this, Messages.METHOD_ADD_INBOX,
-					"error.addUserToDatabase", exception);
-
+			ServerLogger.getDefault().severe(this, Messages.METHOD_ADD_TASK, "error.addTaskToTaskList", exception);
 			rollback(transaction);
-			System.out.println("ROLLBACK\n");
 			return false;
+			
 		} finally {
-			System.out.println("FINALLY\n");
 			closeSession();
 		}
-	}*/
+	}
 
 }

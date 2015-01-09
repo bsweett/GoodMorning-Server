@@ -26,6 +26,7 @@ public class User {
 	private String deviceId;
 	private String userToken;
 	private String nickname;
+	private String email;
 	private Timestamp creationDate;
 	private Timestamp lastActive;
 	
@@ -37,7 +38,9 @@ public class User {
 		setCreationDate(new Timestamp(now.getTimeInMillis()));
 		setLastActive(new Timestamp(now.getTimeInMillis()));
 		setNickname(Messages.UNKNOWN);
-		setUserId(UUID.randomUUID().toString());	// Using Java UUID to randomly generate the user ids
+		setUserId(UUID.randomUUID().toString());
+		setEmail(Messages.UNKNOWN);
+		setDeviceId(Messages.UNKNOWN);
 	}
 
 	public String getUserId() {
@@ -86,6 +89,14 @@ public class User {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Set<RSSFeed> getRssFeeds() {

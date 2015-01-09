@@ -19,10 +19,11 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 	private final String USER_TABLE_NAME = "USERS";
 	private final String DROP_USER_TABLE = "drop table " + getTableName() + ";";
 	private final String CREATE_USER_TABLE = "create table " + getTableName() + "(USER_ID_PK char(36) primary key,"
-			+ "TOKEN tinytext, NICKNAME tinytext, CREATION_TIME timestamp, LAST_UPDATE_TIME timestamp, LAST_ACCESSED_TIME timestamp);";
+			+ "DEVICE_ID tinytext, TOKEN tinytext, NICKNAME tinytext, EMAIL tinytext, CREATION_TIME timestamp, LAST_UPDATE_TIME timestamp, LAST_ACCESSED_TIME timestamp);";
 	
 	private final String USER_CLASS_NAME = "User";
-	private final String SELECT_USER_WITH_TOKEN = "from " + getClassName() + " as user where user.token = :token";
+	private final String SELECT_USER_WITH_TOKEN = "from " + getClassName() + " as user where user.userToken = :userToken";
+	private final String SELECT_USER_WITH_DEVICE = "from " + getClassName() + " as user where user.deviceId = :deviceId";
 	private final String SELECT_NUMBER_USERS = "select count (*) from " + getClassName();
 
 	
@@ -160,6 +161,34 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 		} catch (HibernateException exception) {
 			rollback(transaction);
 			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_USER_BY_TOKEN, "error.getUserByTokenFromDatabase", exception);
+			return null;
+		} finally {
+			closeSession();
+		} 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public synchronized User getUserByDeviceId(String Id) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = HibernateUtility.getCurrentSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(SELECT_USER_WITH_DEVICE);
+			query.setParameter("deviceId", Id);
+			List<User> users = query.list();
+			transaction.commit();
+
+			if (users.isEmpty()) {
+				return null;
+			} else {
+				User user = users.get(0);
+				return user.decryptData();
+			}
+		} catch (HibernateException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_USER_BY_DEVICE, "error.getUserByDeviceIdFromDatabase", exception);
 			return null;
 		} finally {
 			closeSession();

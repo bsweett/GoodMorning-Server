@@ -12,30 +12,20 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtility {
+	
 	private static SessionFactory sessionFactory;
 	private static StandardServiceRegistryBuilder standardServiceRegistryBuilder;
 	private static ServiceRegistry serviceRegistry; 
-	//private static String DATABASE_NAME = "goodmorning-dev";
 
 	/**
 	 * Builds Hibernate session factory based on the Hibernate configuration file.
 	 */
-	// TODO:: Finish adding all the items to the hibernate config file
 	private static void buildSessionFactory() {
 
 		if (sessionFactory == null) {
 			try {
-				Configuration configuration = new Configuration();
-				/*configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");  //Should read from file
-				configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/" + DATABASE_NAME + "?autoReconnect=true"); //Should read from file
-				configuration.setProperty("show_sql", "false");
-				configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-				configuration.setProperty("hibernate.connection.password", "filmreel"); //Should read from file or prompt
-				configuration.setProperty("hibernate.connection.username", "filmreel"); //Should read from file or prompt
-				configuration.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
-				configuration.setProperty("hibernate.current_session_context_class", "thread");
-				configuration.setProperty("hibernate.connection.autocommit", "true"); */
-				configuration.configure("com/goodmorning/resources/hibernate.cfg.xml");
+				Configuration configuration = new Configuration();				
+				configuration.configure();
 				standardServiceRegistryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 				serviceRegistry = standardServiceRegistryBuilder.build();
 				sessionFactory = configuration.buildSessionFactory(serviceRegistry);

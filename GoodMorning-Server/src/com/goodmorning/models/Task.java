@@ -28,7 +28,7 @@ public class Task {
 	private AlertType alertType;
 	private RepeatType repeatType;
 	private String Notes;
-	private User user;
+	private String userId;
 	
 	// TODO: Set TaskHandler on client side
 	public Task() {
@@ -77,12 +77,12 @@ public class Task {
 		return getTaskId().equals(task.getTaskId());
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public AlertType getAlertType() {
