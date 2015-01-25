@@ -1,6 +1,5 @@
 package com.goodmorning.database;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -10,7 +9,6 @@ import org.hibernate.Transaction;
 
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Task;
-import com.goodmorning.models.User;
 import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
 
@@ -20,14 +18,14 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 	
 	private final String TASK_TABLE_NAME = "TASKS";
 	private final String DROP_TASK_TABLE = "drop table " + getTableName() + ";";
-	private final String CREATE_TASK_TABLE = "create table " + getTableName() + "(TASK_ID_PK char(36) primary key,"
-			+ "CREATION_TIME timestamp, ALERT_TIME time, TASK_TYPE enum('CHORE', 'TRAVEL', 'ENTERTAINMENT', 'ALARM', 'UNKNOWN'), ALERT_TYPE enum('NOTIFICATION', 'SOUND', 'VIBERATE', 'ALL', 'NONE')," 
-			+ "REPEAT_TYPE enum('DAILY', 'WEEKLY', 'MONTHLY', 'NONE'), NOTES tinytext, USER_ID_FK char(36));";
+	private final String CREATE_TASK_TABLE = "create table " + getTableName() + "(TASK_ID_PK char(36) primary key, NAME tinytext,"
+			+ "CREATION_TIME timestamp, NEXT_ALERT_TIME timestamp, ALERT_TIME time, TASK_TYPE enum('CHORE', 'TRAVEL', 'ENTERTAINMENT', 'ALARM', 'UNKNOWN'), ALERT_TYPE enum('NOTIFICATION', 'SOUND', 'VIBERATE', 'ALL', 'NONE')," 
+			+ "MON bit, TUE bit, WED bit, THU bit, FRI bit, SAT bit, SUN bit, NOTES tinytext, USER_ID_FK char(36));";
 	
 	private final String TASK_CLASS_NAME = "Task";
 	
 	private final String SELECT_TASK_WITH_TASKID = "from " + getClassName() + " as task where task.taskId = :taskId";
-	private final String SELECT_TASK_WITH_TIME_AND_TYPE = "from " + getClassName() + " as task where task.alertTime = :time and where task.repeatType = :type";
+	private final String SELECT_TASK_WITH_TASKID_AND_TYPE = "from " + getClassName() + " as task where task.taskId = :taskId and where task.taskType = :type";
 	private final String SELECT_LIST_WITH_USERID = "from " + getClassName() + " as task where task.userId = :userId";
 	
 	HibernateTaskManager() {
@@ -90,9 +88,8 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		} 
 	}
 	
-	/*
 	@SuppressWarnings("unchecked")
-	public synchronized Task getTaskByTimeAndType(Timestamp time, TaskType type) {
+	public synchronized Task getTaskByIdAndType(String id, TaskType type) {
 		
 		Session session = null;
 		Transaction transaction = null;
@@ -101,8 +98,9 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery(SELECT_TASK_WITH_TASKID);
+			Query query = session.createQuery(SELECT_TASK_WITH_TASKID_AND_TYPE);
 			query.setParameter("taskId", id);
+			query.setParameter("taskType", type.toString());
 			List<Task> tasks = query.list();
 			transaction.commit();
 
@@ -119,7 +117,7 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		} finally {
 			closeSession();
 		} 
-	}*/
+	}
 	
 	//TODO: Only add after a task of the same time within 60 seconds does not exist
 	@SuppressWarnings("unchecked")
@@ -132,6 +130,11 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
+			session.save(task);
+			transaction.commit();
+			return true;
+			
+			/*
 			Query query = session.createQuery(SELECT_LIST_WITH_USERID);
 		 	query.setParameter("userId", task.getUserId());
 			List<Task> taskList = query.list();
@@ -144,7 +147,7 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 			session.save(task);
 			transaction.commit();
 			System.out.println("Added Task to TaskList\n");
-			return true;
+			return true;*/
 
 		} catch (HibernateException exception) {
 			ServerLogger.getDefault().severe(this, Messages.METHOD_ADD_TASK, "error.addTaskToTaskList", exception);

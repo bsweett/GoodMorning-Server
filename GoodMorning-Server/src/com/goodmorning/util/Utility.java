@@ -1,8 +1,12 @@
 package com.goodmorning.util;
 
 import java.net.InetAddress;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -179,6 +183,48 @@ public class Utility {
 		int i = timeAsString.lastIndexOf(".", timeAsString.length()-1);
 		timeAsString = (String) timeAsString.subSequence(0, i);
 		return timeAsString;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param timeString
+	 * @return
+	 */
+	public static Time stringToTime(String timeString) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:a");
+			long ms = sdf.parse(timeString).getTime();
+			return new Time(ms);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Splits a string of bits that representing days of the week and
+	 * returns a boolean array for each set bit
+	 * 
+	 * @param days
+	 * @return
+	 */
+	public static ArrayList<Boolean> splitDaysString(String days) {
+		char[] cArray = days.toCharArray();
+		
+		if(cArray.length == 7) {
+			ArrayList<Boolean> bArray = new ArrayList<Boolean>();
+			for(char c : cArray) {
+				if(c == '1') {
+					bArray.add(true);
+				} else {
+					bArray.add(false);
+				}
+			}
+			
+			return bArray;
+		}
+		
+		return null;
 	}
 
 	/**

@@ -54,12 +54,28 @@ public class CreateNewUser extends ActionSupport implements StrutsAction {
 					user.setDeviceId(deviceId);
 					user.setNickname(name);
 					user.setEmail(email);
+					user.generateNewUserToken();
+					user.buildInitialTasks();
 					
-					manager.add(user);
+					Boolean result = manager.add(user);
 					
-					actionResponse = new JSONResponse(user);
-					setResponse(actionResponse);
-					
+					if(result == true) {
+						System.out.println("ID: " + user.getUserId());
+						manager.decryptUser(user);
+						System.out.println("ID: " + user.getUserId());
+						actionResponse = new JSONResponse(user);
+						
+						// FIXME: Install no longer works
+						// Need to use gson to parse tasks in hashmap then user object with hash map to json
+						setResponse(actionResponse);
+						
+						
+					} else {
+						fail = new Failure("User already exists", "This User already exists in the system");
+						actionResponse = new JSONResponse(fail);
+						setResponse(actionResponse);
+						
+					}
 				}	
 			}
 			

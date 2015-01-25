@@ -1,9 +1,5 @@
 package com.goodmorning.models;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -11,17 +7,16 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import org.joda.time.LocalTime;
 
-import com.goodmorning.database.DatabaseEncryptionManager;
+import com.goodmorning.enums.AlertType;
+import com.goodmorning.enums.TaskType;
 import com.goodmorning.util.Messages;
 
 public class User {
-	
+
 	private static Logger LOGGER = Logger.getLogger(User.class.getName());
-	
+
 	private String userId;
 	private String deviceId;
 	private String userToken;
@@ -29,10 +24,10 @@ public class User {
 	private String email;
 	private Timestamp creationDate;
 	private Timestamp lastActive;
-	
+
 	private Set<RSSFeed> rssFeeds = new HashSet<RSSFeed>(0);
 	private Set<Task> taskSet = new HashSet<Task>(0);
-	
+
 	public User() {
 		Calendar now = Calendar.getInstance();
 		setCreationDate(new Timestamp(now.getTimeInMillis()));
@@ -75,6 +70,19 @@ public class User {
 		this.taskSet = taskSet;
 	}
 
+	public boolean addTask(Task task) {
+
+		try{
+			this.taskSet.add(task);
+		} catch (Exception e) {
+			LOGGER.warning("Exception adding task: " + e.getLocalizedMessage());
+			return false;
+		}
+
+		return true;
+
+	}
+
 	public String getUserToken() {
 		return userToken;
 	}
@@ -90,7 +98,7 @@ public class User {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -106,20 +114,20 @@ public class User {
 	public void setRssFeeds(Set<RSSFeed> rssFeeds) {
 		this.rssFeeds = rssFeeds;
 	}
-	
+
 	public boolean addRssFeed(RSSFeed feed) {
-		
+
 		try{
 			this.rssFeeds.add(feed);
 		} catch (Exception e) {
 			LOGGER.warning("Exception adding feed: " + e.getLocalizedMessage());
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	public String getDeviceId() {
 		return deviceId;
 	}
@@ -127,69 +135,66 @@ public class User {
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}
-	
+
 	public void generateNewUserToken() {
 		setUserToken(this.getUserId() + "$" + this.getDeviceId() + "$" + this.getCreationDate());
 	}
-	
+
 	public final int getTaskCount() {
 		return getTaskSet().size();
 	}
-	
+
 	public String getUserIdFromToken() {
 		String plainToken = this.getUserToken();
 		String[] str_array = plainToken.split("\\$");
 		if(str_array == null || str_array.length < 3) return "unknown";
 		return str_array[0];
 	}
-	    
-	 //Gets the password from a token
-	 public String getDeviceIdFromToken() {
+
+	//Gets the password from a token
+	public String getDeviceIdFromToken() {
 		String plainToken = this.getUserToken();
- 		String[] str_array = plainToken.split("\\$");
- 		if(str_array == null || str_array.length < 3) return "unknown";
- 		return str_array[1];
- 	}
-	    
-    //Gets the time from a token
-	 public String getTokenTime() {
-		String plainToken = this.getUserToken();
- 		String[] str_array = plainToken.split("\\$");
- 		if(str_array == null || str_array.length < 3) return "unknown";
- 		return str_array[2];
- 	}
-	
-	public User encryptData() {
-		try {
-			this.setNickname(DatabaseEncryptionManager.getInstance().encryptPlainText(this.getNickname()));
-			this.setDeviceId(DatabaseEncryptionManager.getInstance().encryptPlainText(this.getDeviceId()));
-			this.setUserId(DatabaseEncryptionManager.getInstance().encryptPlainText(this.getUserId()));
-			this.setUserToken(DatabaseEncryptionManager.getInstance().encryptPlainText(this.getUserToken()));
-		} catch(InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | InvalidAlgorithmParameterException
-				| UnsupportedEncodingException | IllegalBlockSizeException
-				| BadPaddingException e) {
-			// TODO: Handle Exceptions
-			e.printStackTrace();
-		}
-		
-		return this;
+		String[] str_array = plainToken.split("\\$");
+		if(str_array == null || str_array.length < 3) return "unknown";
+		return str_array[1];
 	}
+
+	//Gets the time from a token
+	public String getTokenTime() {
+		String plainToken = this.getUserToken();
+		String[] str_array = plainToken.split("\\$");
+		if(str_array == null || str_array.length < 3) return "unknown";
+		return str_array[2];
+	}
+
 	
-	public User decryptData() {
+	/**
+	 * Creates tasks for initial alarms and adds them to the users task list
+	 * 
+	 * @return true if all tasks were added without a problem
+	 */
+	public boolean buildInitialTasks() {
+
 		try {
-			this.setNickname(DatabaseEncryptionManager.getInstance().decryptCipherText(this.getNickname()));
-			this.setDeviceId(DatabaseEncryptionManager.getInstance().decryptCipherText(this.getDeviceId()));
-			this.setUserId(DatabaseEncryptionManager.getInstance().decryptCipherText(this.getUserId()));
-			this.setUserToken(DatabaseEncryptionManager.getInstance().decryptCipherText(this.getUserToken()));
-		} catch(InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | InvalidAlgorithmParameterException
-				| UnsupportedEncodingException | IllegalBlockSizeException
-				| BadPaddingException e) {
-			// TODO: Handle Exceptions
-			e.printStackTrace();
+			
+			LocalTime time = new LocalTime(7,0); 
+			Task task1 = new Task(TaskType.ALARM, AlertType.SOUND, "Wake Up", time, this);
+
+			time.plusMinutes(30);
+			Task task2 = new Task(TaskType.ALARM, AlertType.SOUND, "Out of Bed", time, this);
+
+			time.plusHours(1);
+			Task task3 = new Task(TaskType.ALARM, AlertType.SOUND, "Time to leave", time, this);
+
+			time = new LocalTime(0,0);
+			Task task4 = new Task(TaskType.ALARM, AlertType.SOUND, "Time for Bed", time, this);
+
+			return this.addTask(task1) && this.addTask(task2) && this.addTask(task3) && this.addTask(task4);
+			
+		} catch (Exception e) {
+			System.out.println("Exception building tasks");
+			return false;
 		}
-		
-		return this;
+
 	}
 }

@@ -26,13 +26,10 @@
          <property name="email">
             <column name="EMAIL" sql-type="tinytext" not-null="true"/>
         </property>                 
-        <property name="creationTimestamp" type="timestamp">
+        <property name="creationDate" type="timestamp">
             <column name="CREATION_TIME" sql-type="timestamp" not-null="true" />
         </property>        
-        <property name="lastUpdateTimestamp" type="timestamp">
-            <column name="LAST_UPDATE_TIME" sql-type="timestamp" not-null="true" />
-        </property>
-         <property name="lastAccessedTimestamp" type="timestamp">
+         <property name="lastActive" type="timestamp">
             <column name="LAST_ACCESSED_TIME" sql-type="timestamp" not-null="true" />
         </property>
         
@@ -43,10 +40,11 @@
     		<one-to-many class="com.goodmorning.models.Task"/>
 		</set>
 		
+		<!-- 
 		 <set name="rssFeeds" table="RSSFEEDS" lazy="false" cascade="all">
     		<key column="USER_ID_FK" not-null="true"/>
     		<one-to-many class="com.goodmorning.models.RSSFeed"/>
-		</set>
+		</set> -->
     </class>
 
 </hibernate-mapping>

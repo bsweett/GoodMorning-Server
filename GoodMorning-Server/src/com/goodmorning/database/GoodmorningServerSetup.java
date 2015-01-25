@@ -1,7 +1,5 @@
-package com.goodmorning;
+package com.goodmorning.database;
 
-import com.goodmorning.database.HibernateTaskManager;
-import com.goodmorning.database.HibernateUserManager;
 
 public class GoodmorningServerSetup {
 
