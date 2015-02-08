@@ -1,5 +1,7 @@
 package com.goodmorning.models;
 
+import java.util.Set;
+
 import com.google.gson.Gson;
 
 public class JSONResponse {
@@ -16,6 +18,11 @@ public class JSONResponse {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public JSONResponse(Set<Task> taskSet) {
+		Gson gsonObject = new Gson();
+		setJson(gsonObject.toJson(taskSet));	
 	}
 	
 	public JSONResponse(Failure object) {

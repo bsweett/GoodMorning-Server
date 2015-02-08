@@ -1,7 +1,6 @@
 package com.goodmorning.actions;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,29 +10,26 @@ import com.goodmorning.database.HibernateUserManager;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Failure;
 import com.goodmorning.models.JSONResponse;
-import com.goodmorning.models.Task;
 import com.goodmorning.models.User;
 import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
-import com.goodmorning.util.Utility;
 import com.opensymphony.xwork2.ActionSupport;
 
-// TODO: Test adding a task
-
-public class CreateNewTask extends ActionSupport implements StrutsAction {
+/**
+ * Gets all the tasks for a given user by token
+ * 
+ * @author bensweett
+ *
+ */
+public class GetUserTasks  extends ActionSupport implements StrutsAction {
 
 	private static final long serialVersionUID = 1L;
 	private JSONResponse response;
 	private HttpServletRequest request;
-	private HibernateTaskManager taskManager;
 	private HibernateUserManager userManager;
 
 	private final String parameter_1 = "token";
-	private final String parameter_2 = "time";
-	private final String parameter_3 = "days";
-	private final String parameter_4 = "notes";	// Limit to 140 characters
-	private final String parameter_5 = "type";
-	private final String parameter_6 = "name";
+	private final String parameter_2 = "type";
 
 	@Override
 	public String execute() throws Exception {
@@ -46,13 +42,9 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 		try {
 
 			String token = getServletRequest().getParameter(parameter_1);
-			String time = getServletRequest().getParameter(parameter_2);
-			String days = getServletRequest().getParameter(parameter_3);
-			String notes = getServletRequest().getParameter(parameter_4);
-			TaskType type = TaskType.fromString(getServletRequest().getParameter(parameter_5));
-			String name = getServletRequest().getParameter(parameter_6);
+			String type = getServletRequest().getParameter(parameter_2);
 
-			if(token.isEmpty() || time.isEmpty() || days.isEmpty() || type == null || name.isEmpty()) {
+			if(token.isEmpty()) {
 				fail = new Failure("Invalid Request", "The request is missing parameters");
 				actionResponse = new JSONResponse(fail);
 				setResponse(actionResponse);
@@ -74,14 +66,13 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 				} else {
 
 					user.setLastActive(new Timestamp(now.getTimeInMillis()));
-					actionResponse = buildResponseCreateTaskForUser(user, time, days, notes, type, name);
+					actionResponse = buildResponseForTaskType(user, type);
 					setResponse(actionResponse);
-
 				}
 			}
 
 		} catch (Exception e) {
-			ServerLogger.getDefault().severe(this, Messages.METHOD_ADD_TASK, "error.CreateTaskAction", e);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_ALL_TASKS, "error.GetUserTasksAction", e);
 			fail = new Failure("Exception", e.getLocalizedMessage());
 			actionResponse = new JSONResponse(fail);
 			setResponse(actionResponse);
@@ -89,49 +80,22 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 
 		return "response";
 	}
-
-	private JSONResponse buildResponseCreateTaskForUser(User user, String time, String days, String notes, TaskType type, String name) {
-		Task task;
-		Failure fail;
-
-		taskManager = getTaskManager();
-		task = taskManager.getTaskByIdAndType(name, type);
-
-		if(task != null) {
-			fail = new Failure("Task already exists", "The task name and type already exists");
-			return new JSONResponse(fail);
+	
+	private JSONResponse buildResponseForTaskType(User user, String type) {
+		TaskType tasktype = TaskType.fromString(type);
+		
+		switch(tasktype) {
+		case ALARM:
+			return new JSONResponse(user.getAlarmTasks());
+		case CHORE:
+			return new JSONResponse(user.getChoreTasks());
+		case ENTERTAINMENT:
+			return new JSONResponse(user.getEntertainmentTasks());
+		case TRAVEL:
+			return new JSONResponse(user.getTravelTasks());
+		default:
+			return new JSONResponse(user.getTaskSet());
 		}
-		
-		task = new Task();
-		task.setName(name);
-		task.setNotes(notes);
-		task.setTaskType(type);
-
-		ArrayList<Boolean> DoTW = Utility.splitDaysString(days);
-		task.setMonday(DoTW.get(0));
-		task.setTuesday(DoTW.get(1));
-		task.setWednesday(DoTW.get(2));
-		task.setThursday(DoTW.get(3));
-		task.setFriday(DoTW.get(4));
-		task.setSaturday(DoTW.get(5));
-		task.setSunday(DoTW.get(6));	
-
-		try {
-			task.setAlertTime(Utility.stringToTime(time));
-		} catch (NullPointerException e) {
-			fail = new Failure("Exception", "Invalid time caused a null pointer");
-			return new JSONResponse(fail);
-		}
-		
-		task.setUser(user);
-		user.addTask(task);
-		
-		if(userManager.update(user)) {
-			return new JSONResponse("OK");
-		} 
-
-		fail = new Failure("Database failure", "Failed to update user with task");
-		return new JSONResponse(fail);
 	}
 
 	@Override

@@ -6,104 +6,80 @@
 <!-- http://struts.apache.org/2.x/docs/hello-world-using-struts-2.html -->
 
 <struts>
-	<!-- http://struts.apache.org/2.0.11/docs/devmode.html-->
+	<!-- http://struts.apache.org/2.0.11/docs/devmode.html -->
 	<constant name="struts.devMode" value="true" />
-	<constant name="struts.custom.i18n.resources" value="global"/>
-	<constant name="struts.action.excludePattern" value="ImageServlet"/>
+	<constant name="struts.custom.i18n.resources" value="global" />
+	<constant name="struts.action.excludePattern" value="ImageServlet" />
 
 	<package name="social-package" namespace="/" extends="struts-default">
+
+	<!--  TODO should i do this?
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.NullPointerException"
+				result="error" />
+		</global-exception-mappings>-->
 
 		<action name="index">
 			<result>index.jsp</result>
 		</action>
-  		
-  		<action name="install" class="com.goodmorning.actions.CreateNewUser" method="execute">  		
-    		<result name="response">response.jsp</result>
-  		</action>
- 
-  		<action name="connectUser" class="com.goodmorning.actions.ConnectUser" method="execute">
-    		<result name="response">response.jsp</result>
-  		</action>
-  		
-  		<!-- 
-  		<action name="updateUser" class="com.goodmorning.actions.UpdateUser" method="execute">
-    		<result name="response">response.jsp</result>
-  		</action>
-  		
-  		<action name="newTask" class="com.goodmorning.actions.CreateNewTask" method="execute">
-    		<result name="response">response.jsp</result>
-  		</action>
-  		
-  		<action name="updateTask" class="com.goodmorning.actions.UpdateTask" method="execute">
-    		<result name="response">response.jsp</result>
-  		</action>
-  		
-  		<action name="deleteTask" class="com.goodmorning.actions.DeleteTask" method="execute">
-    		<result name="response">response.jsp</result>
-  		</action> -->
-  		
-  		<!--
-  		<action name="add" class="com.filmreel.actions.AddFriendAction" method="execute">
-    		<result name="success">pages/success/success-add.jsp</result>
-    		<result name="fail">pages/error/error-fail.jsp</result>
-    		<result name="NoUserFound">pages/error/error-nouser.jsp</result>
-    		<result name="AlreadyFriends">pages/error/error-AlreadyFriends.jsp</result>
-    		<result name="CurrentUserError">pages/error/error-nouser.jsp</result>
-    		<result name="error">pages/error/error-fail.jsp</result>
-  		</action>
-  		
-  		<action name="tokenlogin" class="com.filmreel.actions.TokenLoginAction" method="execute">
-    		<result name="success">pages/success/success-send.jsp</result>
-    		<result name="fail">pages/error/error-fail.jsp</result>
-    		<result name="error">pages/error/error-fail.jsp</result>
-  		</action>
-  		
-  		<action name="getfrienddata" class="com.filmreel.actions.GetFriendData" method="execute">
-    		<result name="success">pages/success/success-send.jsp</result>
-    		<result name="fail">pages/error/error-fail.jsp</result>
-    		<result name="error">pages/error/error-fail.jsp</result>
-  		</action>
-  		
-  		<action name="saveuserdata" class="com.filmreel.actions.SaveUserData" method="execute">
-    		<result name="success">pages/success/success-send.jsp</result>
-    		<result name="fail">pages/error/error-fail.jsp</result>
-    		<result name="error">pages/error/error-fail.jsp</result>
-  		</action>
-  		
-  		<action name="getinbox" class="com.filmreel.actions.GetInboxAction" method="execute">
-    		<result name="success">pages/success/success-send.jsp</result>
-    		<result name="fail">pages/error/error-fail.jsp</result>
-    		<result name="error">pages/error/error-fail.jsp</result>
-  		</action>
-	 
-		<action name="fileuploadaction" class="com.filmreel.actions.FileUploadAction">
-		    <interceptor-ref name="exception"/>
-	            <interceptor-ref name="i18n"/>
-	            <interceptor-ref name="fileUpload">
-	       		<param name="allowedTypes">image/jpeg</param>
-	       		<param name="maximumSize">5000000</param>
-	  	    </interceptor-ref> 
-	            <interceptor-ref name="params">
-	                <param name="excludeParams">dojo\..*,^struts\..*</param>
-	            </interceptor-ref>
-	            <interceptor-ref name="validation">
-	                <param name="excludeMethods">input,back,cancel,browse</param>
-	            </interceptor-ref>
-	            <interceptor-ref name="workflow">
-	                <param name="excludeMethods">input,back,cancel,browse</param>
-	            </interceptor-ref>
-	 
-		    <result name="success">pages/success/success-upload.jsp</result>
-		    <result name="error">pages/error/error-upload.jsp</result>
-	 
+
+		<action name="install" class="com.goodmorning.actions.CreateNewUser"
+			method="execute">
+			<result name="response">response.jsp</result>
+		</action>
+
+		<action name="newtask" class="com.goodmorning.actions.CreateNewTask"
+			method="execute">
+			<result name="response">response.jsp</result>	
 		</action>
 		
-		<action name="send" class="com.filmreel.actions.SendReelAction" method="execute">
-    		<result name="success">pages/success/success-send.jsp</result>
-    		<result name="error">pages/error/error-fail.jsp</result>
-    		<result name="CurrentUserError">pages/error/error-fail.jsp</result>
-    		 <result name="error">pages/error/error-fail.jsp</result>
-  		</action> -->
-  	</package>
+		<action name="tasklist" class="com.goodmorning.actions.GetUserTasks"
+			method="execute">
+			<result name="response">response.jsp</result>
+		</action>
+
+		<action name="connectUser" class="com.goodmorning.actions.ConnectUser"
+			method="execute">
+			<result name="response">response.jsp</result>
+		</action>
+
+		<!-- <action name="updateUser" class="com.goodmorning.actions.UpdateUser" 
+			method="execute"> <result name="response">response.jsp</result> </action> 
+			<action name="newTask" class="com.goodmorning.actions.CreateNewTask" method="execute"> 
+			<result name="response">response.jsp</result> </action> <action name="updateTask" 
+			class="com.goodmorning.actions.UpdateTask" method="execute"> <result name="response">response.jsp</result> 
+			</action> <action name="deleteTask" class="com.goodmorning.actions.DeleteTask" 
+			method="execute"> <result name="response">response.jsp</result> </action> -->
+
+		<!-- <action name="add" class="com.filmreel.actions.AddFriendAction" method="execute"> 
+			<result name="success">pages/success/success-add.jsp</result> <result name="fail">pages/error/error-fail.jsp</result> 
+			<result name="NoUserFound">pages/error/error-nouser.jsp</result> <result 
+			name="AlreadyFriends">pages/error/error-AlreadyFriends.jsp</result> <result 
+			name="CurrentUserError">pages/error/error-nouser.jsp</result> <result name="error">pages/error/error-fail.jsp</result> 
+			</action> <action name="tokenlogin" class="com.filmreel.actions.TokenLoginAction" 
+			method="execute"> <result name="success">pages/success/success-send.jsp</result> 
+			<result name="fail">pages/error/error-fail.jsp</result> <result name="error">pages/error/error-fail.jsp</result> 
+			</action> <action name="getfrienddata" class="com.filmreel.actions.GetFriendData" 
+			method="execute"> <result name="success">pages/success/success-send.jsp</result> 
+			<result name="fail">pages/error/error-fail.jsp</result> <result name="error">pages/error/error-fail.jsp</result> 
+			</action> <action name="saveuserdata" class="com.filmreel.actions.SaveUserData" 
+			method="execute"> <result name="success">pages/success/success-send.jsp</result> 
+			<result name="fail">pages/error/error-fail.jsp</result> <result name="error">pages/error/error-fail.jsp</result> 
+			</action> <action name="getinbox" class="com.filmreel.actions.GetInboxAction" 
+			method="execute"> <result name="success">pages/success/success-send.jsp</result> 
+			<result name="fail">pages/error/error-fail.jsp</result> <result name="error">pages/error/error-fail.jsp</result> 
+			</action> <action name="fileuploadaction" class="com.filmreel.actions.FileUploadAction"> 
+			<interceptor-ref name="exception"/> <interceptor-ref name="i18n"/> <interceptor-ref 
+			name="fileUpload"> <param name="allowedTypes">image/jpeg</param> <param name="maximumSize">5000000</param> 
+			</interceptor-ref> <interceptor-ref name="params"> <param name="excludeParams">dojo\..*,^struts\..*</param> 
+			</interceptor-ref> <interceptor-ref name="validation"> <param name="excludeMethods">input,back,cancel,browse</param> 
+			</interceptor-ref> <interceptor-ref name="workflow"> <param name="excludeMethods">input,back,cancel,browse</param> 
+			</interceptor-ref> <result name="success">pages/success/success-upload.jsp</result> 
+			<result name="error">pages/error/error-upload.jsp</result> </action> <action 
+			name="send" class="com.filmreel.actions.SendReelAction" method="execute"> 
+			<result name="success">pages/success/success-send.jsp</result> <result name="error">pages/error/error-fail.jsp</result> 
+			<result name="CurrentUserError">pages/error/error-fail.jsp</result> <result 
+			name="error">pages/error/error-fail.jsp</result> </action> -->
+	</package>
 
 </struts>

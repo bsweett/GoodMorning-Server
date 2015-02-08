@@ -10,6 +10,12 @@ import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
 import com.opensymphony.xwork2.ActionSupport;
 
+/**
+ * Creates a new user when the app is freshly installed on a new device
+ * 
+ * @author bensweett
+ *
+ */
 public class CreateNewUser extends ActionSupport implements StrutsAction {
 
 	private static final long serialVersionUID = 1L;
@@ -60,9 +66,9 @@ public class CreateNewUser extends ActionSupport implements StrutsAction {
 					Boolean result = manager.add(user);
 					
 					if(result == true) {
-						System.out.println("ID: " + user.getUserId());
-						manager.decryptUser(user);
-						System.out.println("ID: " + user.getUserId());
+						//System.out.println("ID: " + user.getUserId());
+						//manager.decryptUser(user);
+						//System.out.println("ID: " + user.getUserId());
 						actionResponse = new JSONResponse(user);
 						
 						// FIXME: Install no longer works

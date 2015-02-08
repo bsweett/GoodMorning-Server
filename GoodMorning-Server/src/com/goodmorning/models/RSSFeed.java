@@ -1,59 +1,207 @@
 package com.goodmorning.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Logger;
 
 import com.goodmorning.enums.RSSType;
+import com.goodmorning.util.Messages;
 
 public class RSSFeed {
-	private final String title;
-	private final String link;
-	private final String description;
-	private final String language;
-	private final String copyright;
-	private final String pubDate;
+	
+	private static Logger LOGGER = Logger.getLogger(RSSFeed.class.getName());
+	
+	private String feedId;
+	private String title;
+	private String link;
+	private String description;
+	private String language;
+	private String copyright;
+	private Timestamp pubDate;
 	private RSSType type;
 
-	private final List<RSSMessage> entries = new ArrayList<RSSMessage>();
+	private Timestamp creationTimestamp;
+	private Timestamp lastActiveTimestamp;
+	private transient User user;
 
-	public RSSFeed(String title, String link, String description, String language, String copyright, String pubDate) {
-		this.title = title;
-		this.link = link;
-		this.description = description;
-		this.language = language;
-		this.copyright = copyright;
-		this.pubDate = pubDate;
-		this.type = RSSType.UNKNOWN;
+	// Remove this from server, client side only
+	//private List<RSSMessage> entries = new ArrayList<RSSMessage>();
+
+	public RSSFeed() {
+		setTitle(Messages.UNKNOWN);
+		setLink(Messages.UNKNOWN);
+		setDescription(Messages.UNKNOWN);
+		setLanguage(Messages.UNKNOWN);
+		setCopyright(Messages.UNKNOWN);
+		setType(RSSType.OTHER);
+		
+		// User is null when this is called
+		Calendar now = Calendar.getInstance();
+		setPubDate(new Timestamp(now.getTimeInMillis()));
+		
+		setCreationTimestamp(new Timestamp(now.getTimeInMillis()));
+		setLastActiveTimestamp(new Timestamp(now.getTimeInMillis()));
+	}
+	
+	public RSSFeed(String title, String link, String description, String language, String copyright, String pubDate, User user) {
+		setTitle(title);
+		setLink(link);
+		setDescription(description);
+		setLanguage(language);
+		setCopyright(copyright);
+		setPubDateFromString(pubDate);
+		setType(RSSType.OTHER);
+		setUser(user);
+		
+		Calendar now = Calendar.getInstance();
+		setCreationTimestamp(new Timestamp(now.getTimeInMillis()));
+		setLastActiveTimestamp(new Timestamp(now.getTimeInMillis()));
+	}
+	
+	public String getFeedId() {
+		return feedId;
 	}
 
+	public void setFeedId(String feedId) {
+		this.feedId = feedId;
+	}
+
+	/*
 	public List<RSSMessage> getMessages() {
 		return entries;
 	}
+	
+	public void setMessages(List<RSSMessage> messages) {
+		this.entries = messages;
+	}
+	
+	public boolean addMessage(RSSMessage message) {
+
+		try{
+			this.entries.add(message);
+		} catch (Exception e) {
+			LOGGER.warning("Exception adding task: " + e.getLocalizedMessage());
+			return false;
+		}
+
+		return true;
+
+	}*/
 
 	public String getTitle() {
 		return title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getLink() {
 		return link;
 	}
+	
+	public void setLink(String link) {
+		this.link = link;
+	}
 
 	public String getDescription() {
 		return description;
+	}
+	
+	public void setDescription(String des) {
+		this.description = des;
 	}
 
 	public String getLanguage() {
 		return language;
 	}
+	
+	public void setLanguage(String lang) {
+		this.language = lang;
+	}
 
 	public String getCopyright() {
 		return copyright;
 	}
-
-	public String getPubDate() {
-		return pubDate;
+	
+	public void setCopyright(String copyright) {
+		this.copyright = copyright;
 	}
 
+	public Timestamp getPubDate() {
+		return pubDate;
+	}
+	
+	public void setPubDate(Timestamp pubDate) {
+		this.pubDate = pubDate;
+	}
+
+	public RSSType getType() {
+		return type;
+	}
+	
+	public void setType(RSSType type) {
+		this.type = type;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Timestamp getCreationTimestamp() {
+		return creationTimestamp;
+	}
+
+	public void setCreationTimestamp(Timestamp creationTimestamp) {
+		this.creationTimestamp = creationTimestamp;
+	}
+
+	public Timestamp getLastActiveTimestamp() {
+		return lastActiveTimestamp;
+	}
+
+	public void setLastActiveTimestamp(Timestamp lastActiveTimestamp) {
+		this.lastActiveTimestamp = lastActiveTimestamp;
+	}
+	
+	// TODO: test for alternate format
+	public String pubDateToString() {
+		
+		String result = "";
+		
+		try {
+			result = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z").format(new Date((this.pubDate.getTime())));
+		} catch(Exception e) {
+			LOGGER.warning("Exception parsing pubDate to string: " + e.getLocalizedMessage());
+		}
+		
+		return result;
+	}
+	
+	// TODO: test for alternate format
+	/*
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        String dts = p_date.replaceAll("([\\+\\-]\\d\\d):(\\d\\d)","$1$2");
+        return formatter.parse(dts);*/
+	public void setPubDateFromString(String date) {
+		
+		//yyyy-MM-dd'T'HH:mm:ss.SSSZ
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+		
+		try {
+			this.pubDate = new Timestamp(formatter.parse(date).getTime());
+		} catch(Exception e) {
+			LOGGER.warning("Exception parsing string to pubDate: " + e.getLocalizedMessage());
+		}
+		
+	}
+	
 	@Override
 	public String toString() {
 		return "Feed [copyright=" + copyright + ", description=" + description
@@ -61,7 +209,4 @@ public class RSSFeed {
 				+ pubDate + ", title=" + title + "]";
 	}
 
-	public RSSType getType() {
-		return type;
-	}
 }

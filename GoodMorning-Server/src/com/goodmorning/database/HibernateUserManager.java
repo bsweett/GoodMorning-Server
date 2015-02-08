@@ -62,13 +62,13 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 		Transaction transaction = null;
 		Session session = null;
 		User user = (User) object;
-		User enryptedUser = encryptUser(user);
+		//User enryptedUser = encryptUser(user);
 		
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(SELECT_USER_WITH_TOKEN);
-		 	query.setParameter("userToken", enryptedUser.getUserToken());
+		 	query.setParameter("userToken", user.getUserToken());
 			@SuppressWarnings("unchecked")
 			List<User> users = query.list();
 
@@ -77,7 +77,7 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 				return false;
 			}
 				
-			session.save(enryptedUser);
+			session.save(user);
 			transaction.commit();
 			System.out.println("RESULT: Successful\n");
 			return true;
@@ -99,8 +99,8 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 	 * @return
 	 */
 	public synchronized boolean updateUser(User user) {
-		User enryptedUser = encryptUser(user);
-		boolean result = super.update(enryptedUser);	
+		//User enryptedUser = encryptUser(user);
+		boolean result = super.update(user);	
 		return result;
 	}
 	
@@ -144,11 +144,16 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 		
 		Session session = null;
 		Transaction transaction = null;
+		//String encryptedToken = encryptToken(token);
+		
+		System.out.println("Normal Token: " + token);
+		//System.out.println("Enrypted token: " + encryptedToken);
+		
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(SELECT_USER_WITH_TOKEN);
-			query.setParameter("token", token);
+			query.setParameter("userToken", token);
 			List<User> users = query.list();
 			transaction.commit();
 
@@ -172,13 +177,13 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 		
 		Session session = null;
 		Transaction transaction = null;
-		String encryptedDeviceId = encryptManager.encrypt(Id);
+		//String encryptedDeviceId = encryptManager.encrypt(Id);
 		
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(SELECT_USER_WITH_DEVICE);
-			query.setParameter("deviceId", encryptedDeviceId);
+			query.setParameter("deviceId", Id);
 			List<User> users = query.list();
 			transaction.commit();
 
@@ -219,6 +224,10 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 		} finally {
 			closeSession();
 		}
+	}
+	
+	private String encryptToken(String token) {
+		return encryptManager.encrypt(token);
 	}
 	
 	public User encryptUser(User user) {

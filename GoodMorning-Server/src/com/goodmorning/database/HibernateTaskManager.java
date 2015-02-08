@@ -19,7 +19,7 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 	private final String TASK_TABLE_NAME = "TASKS";
 	private final String DROP_TASK_TABLE = "drop table " + getTableName() + ";";
 	private final String CREATE_TASK_TABLE = "create table " + getTableName() + "(TASK_ID_PK char(36) primary key, NAME tinytext,"
-			+ "CREATION_TIME timestamp, NEXT_ALERT_TIME timestamp, ALERT_TIME time, TASK_TYPE enum('CHORE', 'TRAVEL', 'ENTERTAINMENT', 'ALARM', 'UNKNOWN'), ALERT_TYPE enum('NOTIFICATION', 'SOUND', 'VIBERATE', 'ALL', 'NONE')," 
+			+ "CREATION_TIME timestamp, NEXT_ALERT_TIME timestamp, ALERT_TIME time, TASK_TYPE enum('CHORE', 'TRAVEL', 'ENTERTAINMENT', 'ALARM', 'UNKNOWN'), SOUND tinytext," 
 			+ "MON bit, TUE bit, WED bit, THU bit, FRI bit, SAT bit, SUN bit, NOTES tinytext, USER_ID_FK char(36));";
 	
 	private final String TASK_CLASS_NAME = "Task";

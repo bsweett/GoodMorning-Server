@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="com.goodmorning.models.RSSFeed" table="RSSFEEDS"
+		lazy="false">
+
+		<!-- A 36 hex character is our surrogate key. It's automatically generated 
+			by Hibernate with the UUID pattern. -->
+
+		<id name="feedId" type="string" unsaved-value="null">
+			<column name="FEED_ID_PK" sql-type="char(36)" not-null="true" />
+			<generator class="org.hibernate.id.UUIDGenerator" />
+		</id>
+
+		<property name="title" type="string">
+			<column name="TITLE" sql-type="tinytext" not-null="true" />
+		</property>
+
+		<property name="creationTimestamp" type="timestamp">
+			<column name="CREATION_TIME" sql-type="timestamp" not-null="true" />
+		</property>
+
+		<property name="lastActiveTimestamp" type="timestamp">
+			<column name="LAST_ACTIVE" sql-type="timestamp" not-null="true" />
+		</property>
+
+		<property name="link" type="string">
+			<column name="LINK" sql-type="tinytext" not-null="true" />
+		</property>
+
+		<property name="description" type="string">
+			<column name="DESCRIPTION" sql-type="tinytext" not-null="true" />
+		</property>
+		
+		<property name="type" column="RSS_TYPE" update="true"
+			insert="true" index="true">
+			<type name="com.goodmorning.enums.HibernateVarCharEnum">
+				<param name="enumClass">com.goodmorning.enums.RSSType</param>
+			</type>
+		</property>
+
+		<property name="language" type="string">
+			<column name="LANGUAGE" sql-type="tinytext" not-null="true" />
+		</property>
+
+		<property name="pubDate" type="timestamp">
+			<column name="PUB_DATE" sql-type="timestamp" not-null="true" />
+		</property>
+
+		<property name="copyright" type="string">
+			<column name="COPYRIGHT" sql-type="tinytext" not-null="true" />
+		</property>
+
+		<!-- Many feeds's can be mapped to a single user. -->
+		<many-to-one name="user" class="com.goodmorning.models.User"
+			fetch="select" insert="false" update="false">
+			<column name="USER_ID_FK" not-null="true" />
+		</many-to-one>
+
+	</class>
+
+</hibernate-mapping>

@@ -16,6 +16,8 @@ import com.goodmorning.models.RSSMessage;
 import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
 
+// TODO: Update this to work with our new RSSFeed object that can be stored in a DB
+// RSSMessages can probably just be used on the client (i.e. no DB storage)
 public class RSSFeedParser {
 	private final String TITLE = "title";
 	private final String DESCRIPTION = "description";
@@ -66,7 +68,7 @@ public class RSSFeedParser {
 					case ITEM:
 						if (isFeedHeader) {
 							isFeedHeader = false;
-							feed = new RSSFeed(title, link, description, language, copyright, pubdate);
+							//feed = new RSSFeed(title, link, description, language, copyright, pubdate);
 						}
 						event = eventReader.nextEvent();
 						break;
@@ -103,7 +105,7 @@ public class RSSFeedParser {
 						message.setGuid(guid);
 						message.setLink(link);
 						message.setTitle(title);
-						feed.getMessages().add(message);
+						//feed.getMessages().add(message);
 						event = eventReader.nextEvent();
 						continue;
 					}

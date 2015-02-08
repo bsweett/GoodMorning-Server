@@ -39,6 +39,6 @@
 		<!-- Mapping files -->
 		<mapping resource="User.hbm.xml" />
 		<mapping resource="Task.hbm.xml" />
-		<!-- <mapping resource="Settings.hbm.xml" /> -->
+		<mapping resource="RSSFeed.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

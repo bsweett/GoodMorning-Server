@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.joda.time.LocalTime;
 
-import com.goodmorning.enums.AlertType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.util.Messages;
 
@@ -167,7 +166,7 @@ public class User {
 		return str_array[2];
 	}
 
-	
+
 	/**
 	 * Creates tasks for initial alarms and adds them to the users task list
 	 * 
@@ -176,25 +175,73 @@ public class User {
 	public boolean buildInitialTasks() {
 
 		try {
-			
+
 			LocalTime time = new LocalTime(7,0); 
-			Task task1 = new Task(TaskType.ALARM, AlertType.SOUND, "Wake Up", time, this);
+			Task task1 = new Task(TaskType.ALARM, "Slow Rise", "Wake Up", time, this);
 
 			time.plusMinutes(30);
-			Task task2 = new Task(TaskType.ALARM, AlertType.SOUND, "Out of Bed", time, this);
+			Task task2 = new Task(TaskType.ALARM, "Slow Rise", "Out of Bed", time, this);
 
 			time.plusHours(1);
-			Task task3 = new Task(TaskType.ALARM, AlertType.SOUND, "Time to leave", time, this);
+			Task task3 = new Task(TaskType.ALARM, "Slow Rise", "Time to leave", time, this);
 
 			time = new LocalTime(0,0);
-			Task task4 = new Task(TaskType.ALARM, AlertType.SOUND, "Time for Bed", time, this);
+			Task task4 = new Task(TaskType.ALARM, "Slow Rise", "Time for Bed", time, this);
 
 			return this.addTask(task1) && this.addTask(task2) && this.addTask(task3) && this.addTask(task4);
-			
+
 		} catch (Exception e) {
 			System.out.println("Exception building tasks");
 			return false;
 		}
 
+	}
+
+	public Set<Task> getAlarmTasks() {
+		Set<Task> alarmSet = new HashSet<Task>(0);
+
+		for(Task task : this.taskSet) {
+			if(task.getTaskType() == TaskType.ALARM) {
+				alarmSet.add(task);
+			}
+		} 
+
+		return alarmSet;
+	}
+
+	public Set<Task> getChoreTasks() {
+		Set<Task> choreSet = new HashSet<Task>(0);
+
+		for(Task task : this.taskSet) {
+			if(task.getTaskType() == TaskType.CHORE) {
+				choreSet.add(task);
+			}
+		} 
+
+		return choreSet;
+	}
+
+	public Set<Task> getTravelTasks() {
+		Set<Task> travelSet = new HashSet<Task>(0);
+
+		for(Task task : this.taskSet) {
+			if(task.getTaskType() == TaskType.TRAVEL) {
+				travelSet.add(task);
+			}
+		} 
+
+		return travelSet;
+	}
+
+	public Set<Task> getEntertainmentTasks() {
+		Set<Task> entertainmentSet = new HashSet<Task>(0);
+
+		for(Task task : this.taskSet) {
+			if(task.getTaskType() == TaskType.ENTERTAINMENT) {
+				entertainmentSet.add(task);
+			}
+		} 
+
+		return entertainmentSet;
 	}
 }

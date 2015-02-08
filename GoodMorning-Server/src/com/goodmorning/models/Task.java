@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
-import com.goodmorning.enums.AlertType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.util.Messages;
 
@@ -20,7 +19,7 @@ public class Task {
 	private Timestamp nextAlertTimestamp;
 	private TaskType taskType;
 	private Time alertTime;
-	private AlertType alertType;
+	private String soundFileName;
 	private boolean monday;
 	private boolean tuesday;
 	private boolean wednesday;
@@ -42,12 +41,12 @@ public class Task {
 		
 		setAlertTime(new Time(now.getTimeInMillis()));
 		setTaskType(TaskType.UNKNOWN);
-		setAlertType(AlertType.NONE);
+		setSoundFileName(Messages.UNKNOWN);
 		initAllDays(false);
 		setNotes(Messages.UNKNOWN);
 	}
 	
-	public Task(TaskType taskType, AlertType alertType, String name, LocalTime time, User user) {
+	public Task(TaskType taskType, String soundName, String name, LocalTime time, User user) {
 		
 		setName(name);
 		setUser(user);
@@ -62,7 +61,7 @@ public class Task {
 		setNextAlertTimestempFromLocalDate(today.toLocalDateTime());
 		
 		setTaskType(taskType);
-		setAlertType(alertType);
+		setSoundFileName(soundName);
 		initAllDays(false);
 		setNotes("");
 		
@@ -122,15 +121,7 @@ public class Task {
 	public boolean equals(Task task) {
 		return getTaskId().equals(task.getTaskId());
 	}
-
-	public AlertType getAlertType() {
-		return alertType;
-	}
-
-	public void setAlertType(AlertType alertType) {
-		this.alertType = alertType;
-	}
-
+	
 	public boolean isMonday() {
 		return monday;
 	}
@@ -233,5 +224,13 @@ public class Task {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSoundFileName() {
+		return soundFileName;
+	}
+
+	public void setSoundFileName(String soundFileName) {
+		this.soundFileName = soundFileName;
 	}
 }

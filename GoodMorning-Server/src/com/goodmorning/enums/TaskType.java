@@ -2,10 +2,10 @@ package com.goodmorning.enums;
 
 public enum TaskType {
 
-	CHORE("chore"),
-	TRAVEL("travel"),
-	ENTERTAINMENT("entertainment"),
-	ALARM("alarm"),
+	CHORE("Chore"),
+	TRAVEL("Travel"),
+	ENTERTAINMENT("Entertainment"),
+	ALARM("Alarm"),
 	UNKNOWN("");
 
 	private String text;

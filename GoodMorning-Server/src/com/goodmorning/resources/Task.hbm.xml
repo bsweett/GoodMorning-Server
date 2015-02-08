@@ -66,12 +66,9 @@
         	<column name="SUN" sql-type="bit" not-null="true" />
         </property>
         
-        <!-- TODO Is this ENUM Mapped correctly ? -->
-        <property name="alertType" column="ALERT_TYPE" update="true" insert="true" index="true">
-    		<type name="com.goodmorning.enums.HibernateVarCharEnum">
-      			<param name="enumClass">com.goodmorning.enums.AlertType</param>
-    		</type>       
-  		</property>
+        <property name="soundFileName" type="string">
+        	<column name="SOUND" sql-type="tinytext" not-null="true" />
+        </property>
         
         <property name="Notes" type="string">
         	<column name="NOTES" sql-type="tinytext" not-null="true" />

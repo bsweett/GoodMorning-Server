@@ -9,6 +9,9 @@ public class GoodmorningServerSetup {
 		
 		HibernateTaskManager taskManager = HibernateTaskManager.getDefault();
 		taskManager.setupTable();
+		
+		HibernateRSSFeedManager rssManager = HibernateRSSFeedManager.getDefault();
+		rssManager.setupTable();
 	}
 	
 }
