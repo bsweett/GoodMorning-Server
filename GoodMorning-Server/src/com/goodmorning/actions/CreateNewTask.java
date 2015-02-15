@@ -11,6 +11,7 @@ import com.goodmorning.database.HibernateUserManager;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Failure;
 import com.goodmorning.models.JSONResponse;
+import com.goodmorning.models.SuccessMessage;
 import com.goodmorning.models.Task;
 import com.goodmorning.models.User;
 import com.goodmorning.util.Messages;
@@ -74,6 +75,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 				} else {
 
 					user.setLastActive(new Timestamp(now.getTimeInMillis()));
+					System.out.println("User: " + user.toString());
 					actionResponse = buildResponseCreateTaskForUser(user, time, days, notes, type, name);
 					setResponse(actionResponse);
 
@@ -127,7 +129,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 		user.addTask(task);
 		
 		if(userManager.update(user)) {
-			return new JSONResponse("OK");
+			return new JSONResponse(new SuccessMessage(true));
 		} 
 
 		fail = new Failure("Database failure", "Failed to update user with task");

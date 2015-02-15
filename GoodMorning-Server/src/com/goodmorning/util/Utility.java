@@ -193,7 +193,7 @@ public class Utility {
 	 */
 	public static Time stringToTime(String timeString) {
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:a");
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 			long ms = sdf.parse(timeString).getTime();
 			return new Time(ms);
 		} catch (ParseException e) {

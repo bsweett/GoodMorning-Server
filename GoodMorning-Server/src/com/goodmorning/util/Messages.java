@@ -40,4 +40,5 @@ public class Messages {
 	public static final String RSSFEEDPARSER_FAILED = "rss feed parser failed";
 	
 	public static final String UNKNOWN = "UNKNOWN";
+	public static final String OK = "OK";
 }

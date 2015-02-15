@@ -177,16 +177,16 @@ public class User {
 		try {
 
 			LocalTime time = new LocalTime(7,0); 
-			Task task1 = new Task(TaskType.ALARM, "Slow Rise", "Wake Up", time, this);
+			Task task1 = new Task(TaskType.ALARM, "jungle", "Wake Up", time, this);
 
 			time.plusMinutes(30);
-			Task task2 = new Task(TaskType.ALARM, "Slow Rise", "Out of Bed", time, this);
+			Task task2 = new Task(TaskType.ALARM, "amibent", "Out of Bed", time, this);
 
 			time.plusHours(1);
-			Task task3 = new Task(TaskType.ALARM, "Slow Rise", "Time to leave", time, this);
+			Task task3 = new Task(TaskType.ALARM, "jungle", "Time to leave", time, this);
 
 			time = new LocalTime(0,0);
-			Task task4 = new Task(TaskType.ALARM, "Slow Rise", "Time for Bed", time, this);
+			Task task4 = new Task(TaskType.ALARM, "jungle", "Time for Bed", time, this);
 
 			return this.addTask(task1) && this.addTask(task2) && this.addTask(task3) && this.addTask(task4);
 
@@ -243,5 +243,9 @@ public class User {
 		} 
 
 		return entertainmentSet;
+	}
+	
+	public String toString() {
+		return this.userId + " " + this.deviceId + " " + this.nickname + " " + this.email + "\n";
 	}
 }

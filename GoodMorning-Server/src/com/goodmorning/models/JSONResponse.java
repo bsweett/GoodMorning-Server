@@ -30,7 +30,7 @@ public class JSONResponse {
 		setJson(gsonObject.toJson(object));	
 	}
 	
-	public JSONResponse(String message) {
+	public JSONResponse(SuccessMessage message) {
 		Gson gsonObject = new Gson();
 		setJson(gsonObject.toJson(message));
 	}
