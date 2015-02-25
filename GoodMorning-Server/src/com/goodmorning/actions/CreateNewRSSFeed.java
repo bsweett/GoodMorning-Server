@@ -11,6 +11,9 @@ import com.goodmorning.enums.RSSType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Failure;
 import com.goodmorning.models.JSONResponse;
+import com.goodmorning.models.RSSFeed;
+import com.goodmorning.models.SuccessMessage;
+import com.goodmorning.models.Task;
 import com.goodmorning.models.User;
 import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
@@ -25,8 +28,13 @@ public class CreateNewRSSFeed extends ActionSupport implements StrutsAction {
 	private HibernateUserManager userManager;
 	
 	private final String parameter_1 = "token";
-	private final String parameter_2 = "url";
+	private final String parameter_2 = "title";
 	private final String parameter_3 = "type";
+	private final String parameter_4= "updated";
+	private final String parameter_5 = "link";
+	private final String parameter_6 = "description";
+	private final String parameter_7 = "source";
+	private final String parameter_8 = "lang";
 	
 	@Override
 	public String execute() throws Exception {
@@ -38,10 +46,15 @@ public class CreateNewRSSFeed extends ActionSupport implements StrutsAction {
 		
 		try {
 			String token = getServletRequest().getParameter(parameter_1);
-			String url = getServletRequest().getParameter(parameter_2);
+			String title = getServletRequest().getParameter(parameter_2);
 			RSSType type = RSSType.fromString(getServletRequest().getParameter(parameter_3));
+			String updated = getServletRequest().getParameter(parameter_4);
+			String link = getServletRequest().getParameter(parameter_5);
+			String description = getServletRequest().getParameter(parameter_6);
+			String source = getServletRequest().getParameter(parameter_7);
+			String lang = getServletRequest().getParameter(parameter_8);
 			
-			if(token.isEmpty() || url.isEmpty() || type == null) {
+			if(token.isEmpty() || title.isEmpty() || type == null || updated.isEmpty() || link.isEmpty() || source.isEmpty()) {
 				fail = new Failure("Invalid Request", "The request is missing parameters");
 				actionResponse = new JSONResponse(fail);
 				setResponse(actionResponse);
@@ -61,21 +74,30 @@ public class CreateNewRSSFeed extends ActionSupport implements StrutsAction {
 					setResponse(actionResponse);
 
 				} else {
+					RSSFeed feed;
 
-					// TODO: Check that URL returns valid RSS data
-					// (use RSSFeedParser class)
-						// (remove feed message parsing from it) (that goes on the client)
-					
-					// If it doesn't send error to client
-					// If it got RSS data check that the feed doesn't already exist from the same URL
-						// (Select Feed by URL)
-						// Send back error if it already exists (allow them to edit it maybe)
-					// If not add it to the feed list for the user and return
-					
-					user.setLastActive(new Timestamp(now.getTimeInMillis()));
-					//actionResponse = buildResponseCreateTaskForUser(user, time, days, notes, type, name);
-					//setResponse(actionResponse);
+					feedManager = getFeedManager();
+					feed = feedManager.getFeedBySource(source);
 
+					if(feed != null) {
+						fail = new Failure("Feed already exists", "A feed with the same source url already exists");
+						setResponse(new JSONResponse(fail));
+						
+					} else {
+						//user.setLastActive(new Timestamp(now.getTimeInMillis()));
+						feed = new RSSFeed(title, link, type, description, lang, source, updated, user);
+						feed.setUser(user);
+						user.addRssFeed(feed);
+						
+						if(userManager.update(user)) {
+							setResponse(new JSONResponse(new SuccessMessage(true)));
+							
+						} else {
+							fail = new Failure("Database update failed", "Hibernate failed to update the user");
+							setResponse(new JSONResponse(fail));
+						}
+						
+					}
 				}
 			}
 			

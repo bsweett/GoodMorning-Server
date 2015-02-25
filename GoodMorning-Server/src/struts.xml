@@ -37,6 +37,16 @@
 			method="execute">
 			<result name="response">response.jsp</result>
 		</action>
+		
+		<action name="newfeed" class="com.goodmorning.actions.CreateNewRSSFeed"
+			method="execute">
+			<result name="response">response.jsp</result>	
+		</action>
+		
+		<action name="feedlist" class="com.goodmorning.actions.GetUserFeeds"
+			method="execute">
+			<result name="response">response.jsp</result>	
+		</action>
 
 		<action name="connectUser" class="com.goodmorning.actions.ConnectUser"
 			method="execute">

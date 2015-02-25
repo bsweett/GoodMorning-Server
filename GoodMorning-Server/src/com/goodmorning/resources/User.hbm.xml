@@ -33,18 +33,15 @@
             <column name="LAST_ACCESSED_TIME" sql-type="timestamp" not-null="true" />
         </property>
         
-        <!-- Each user has one to many inbox's mapped to them --> 
-        <!-- TODO FINSIH DESIGN -->
         <set name="taskSet" table="TASKS" lazy="false" cascade="all">
     		<key column="USER_ID_FK" not-null="true"/>
     		<one-to-many class="com.goodmorning.models.Task"/>
 		</set>
 		
-		<!-- 
 		 <set name="rssFeeds" table="RSSFEEDS" lazy="false" cascade="all">
     		<key column="USER_ID_FK" not-null="true"/>
     		<one-to-many class="com.goodmorning.models.RSSFeed"/>
-		</set> -->
+		</set>
     </class>
 
 </hibernate-mapping>

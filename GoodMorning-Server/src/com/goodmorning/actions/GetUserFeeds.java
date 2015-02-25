@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.goodmorning.database.HibernateTaskManager;
 import com.goodmorning.database.HibernateUserManager;
-import com.goodmorning.enums.TaskType;
+import com.goodmorning.enums.RSSType;
 import com.goodmorning.models.Failure;
 import com.goodmorning.models.JSONResponse;
 import com.goodmorning.models.User;
@@ -15,13 +15,7 @@ import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
 import com.opensymphony.xwork2.ActionSupport;
 
-/**
- * Gets all the tasks for a given user by token
- * 
- * @author bensweett
- *
- */
-public class GetUserTasks  extends ActionSupport implements StrutsAction {
+public class GetUserFeeds extends ActionSupport implements StrutsAction {
 
 	private static final long serialVersionUID = 1L;
 	private JSONResponse response;
@@ -66,13 +60,13 @@ public class GetUserTasks  extends ActionSupport implements StrutsAction {
 				} else {
 
 					user.setLastActive(new Timestamp(now.getTimeInMillis()));
-					actionResponse = buildResponseForTaskType(user, type);
+					actionResponse = buildResponseForRSSType(user, type);
 					setResponse(actionResponse);
 				}
 			}
 
 		} catch (Exception e) {
-			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_ALL_TASKS, "error.GetUserTasksAction", e);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_GET_RSSFEEDS, "error.GetUserFeedsAction", e);
 			fail = new Failure("Exception", e.getLocalizedMessage());
 			actionResponse = new JSONResponse(fail);
 			setResponse(actionResponse);
@@ -81,16 +75,16 @@ public class GetUserTasks  extends ActionSupport implements StrutsAction {
 		return "response";
 	}
 	
-	private JSONResponse buildResponseForTaskType(User user, String type) {
-		TaskType tasktype = TaskType.fromString(type);
-		
-		if(tasktype != null && tasktype != TaskType.UNKNOWN) {
-			return new JSONResponse(user.getTasksWithType(tasktype));
+	private JSONResponse buildResponseForRSSType(User user, String type) {
+		RSSType feedType = RSSType.fromString(type);
+
+		if(feedType != null && feedType != RSSType.OTHER) {
+			return new JSONResponse(user.getFeedsWithType(feedType));
 		} else {
-			return new JSONResponse(user.getTaskSet());
+			return new JSONResponse(user.getRssFeeds());
 		}
 	}
-
+	
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
@@ -109,7 +103,6 @@ public class GetUserTasks  extends ActionSupport implements StrutsAction {
 	@Override
 	public void setResponse(JSONResponse response) {
 		this.response = response;
-
 	}
 
 	public HibernateUserManager getUserManager() {

@@ -25,7 +25,7 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 	private final String TASK_CLASS_NAME = "Task";
 	
 	private final String SELECT_TASK_WITH_TASKID = "from " + getClassName() + " as task where task.taskId = :taskId";
-	private final String SELECT_TASK_WITH_TASKID_AND_TYPE = "from " + getClassName() + " as task where task.taskId = :taskId and task.taskType = :taskType";
+	private final String SELECT_TASK_WITH_TASKNAME_AND_TYPE = "from " + getClassName() + " as task where task.name = :name and task.taskType = :taskType";
 	private final String SELECT_LIST_WITH_USERID = "from " + getClassName() + " as task where task.userId = :userId";
 	
 	HibernateTaskManager() {
@@ -89,7 +89,7 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public synchronized Task getTaskByIdAndType(String id, TaskType taskType) {
+	public synchronized Task getTaskByNameAndType(String name, TaskType taskType) {
 		
 		Session session = null;
 		Transaction transaction = null;
@@ -98,8 +98,8 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		try {
 			session = HibernateUtility.getCurrentSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery(SELECT_TASK_WITH_TASKID_AND_TYPE);
-			query.setParameter("taskId", id);
+			Query query = session.createQuery(SELECT_TASK_WITH_TASKNAME_AND_TYPE);
+			query.setParameter("name", name);
 			query.setParameter("taskType", taskType);
 			List<Task> tasks = query.list();
 			transaction.commit();

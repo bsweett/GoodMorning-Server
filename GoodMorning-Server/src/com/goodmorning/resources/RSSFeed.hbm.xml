@@ -52,15 +52,14 @@
 			<column name="PUB_DATE" sql-type="timestamp" not-null="true" />
 		</property>
 
-		<property name="copyright" type="string">
-			<column name="COPYRIGHT" sql-type="tinytext" not-null="true" />
+		<property name="source" type="string">
+			<column name="SOURCE" sql-type="tinytext" not-null="true" />
 		</property>
 
-		<!-- Many feeds's can be mapped to a single user. -->
-		<many-to-one name="user" class="com.goodmorning.models.User"
-			fetch="select" insert="false" update="false">
-			<column name="USER_ID_FK" not-null="true" />
-		</many-to-one>
+        <!-- Many feeds's can be mapped to a single user. -->         
+   		<many-to-one name="user" class="com.goodmorning.models.User" fetch="select" insert="false" update="false">
+            <column name="USER_ID_FK" not-null="true" />
+        </many-to-one>
 
 	</class>
 

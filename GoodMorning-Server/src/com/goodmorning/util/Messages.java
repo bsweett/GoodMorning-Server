@@ -21,6 +21,7 @@ public class Messages {
 	public static final String METHOD_READ = "read";
 	public static final String METHOD_ADD_RSSFEED = "add_rssfeed";
 	public static final String METHOD_GET_RSSFEED_BY_FEEDID = "get_rssfeed_by_feedid";
+	public static final String METHOD_GET_RSSFEEDS = "get_rssfeeds";
 	
 	public static final String METHOD_ADD_USER = "add_user";
 	public static final String METHOD_DELETE_USER = "delete_user";

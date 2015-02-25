@@ -97,10 +97,10 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 		Failure fail;
 
 		taskManager = getTaskManager();
-		task = taskManager.getTaskByIdAndType(name, type);
+		task = taskManager.getTaskByNameAndType(name, type);
 
 		if(task != null) {
-			fail = new Failure("Task already exists", "The task name and type already exists");
+			fail = new Failure("Task already exists", "A task with the same name and type already exists");
 			return new JSONResponse(fail);
 		}
 		

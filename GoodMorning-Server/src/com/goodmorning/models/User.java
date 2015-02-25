@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.joda.time.LocalTime;
 
+import com.goodmorning.enums.RSSType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.util.Messages;
 
@@ -197,52 +198,28 @@ public class User {
 
 	}
 
-	public Set<Task> getAlarmTasks() {
-		Set<Task> alarmSet = new HashSet<Task>(0);
+	public Set<Task> getTasksWithType(TaskType type) {
+		Set<Task> set = new HashSet<Task>(0);
 
 		for(Task task : this.taskSet) {
-			if(task.getTaskType() == TaskType.ALARM) {
-				alarmSet.add(task);
+			if(task.getTaskType() == type) {
+				set.add(task);
 			}
 		} 
 
-		return alarmSet;
+		return set;
 	}
+	
+	public Set<RSSFeed> getFeedsWithType(RSSType type) {
+		Set<RSSFeed> set = new HashSet<RSSFeed>(0);
 
-	public Set<Task> getChoreTasks() {
-		Set<Task> choreSet = new HashSet<Task>(0);
-
-		for(Task task : this.taskSet) {
-			if(task.getTaskType() == TaskType.CHORE) {
-				choreSet.add(task);
+		for(RSSFeed feed : this.rssFeeds) {
+			if(feed.getType() == type) {
+				set.add(feed);
 			}
 		} 
 
-		return choreSet;
-	}
-
-	public Set<Task> getTravelTasks() {
-		Set<Task> travelSet = new HashSet<Task>(0);
-
-		for(Task task : this.taskSet) {
-			if(task.getTaskType() == TaskType.TRAVEL) {
-				travelSet.add(task);
-			}
-		} 
-
-		return travelSet;
-	}
-
-	public Set<Task> getEntertainmentTasks() {
-		Set<Task> entertainmentSet = new HashSet<Task>(0);
-
-		for(Task task : this.taskSet) {
-			if(task.getTaskType() == TaskType.ENTERTAINMENT) {
-				entertainmentSet.add(task);
-			}
-		} 
-
-		return entertainmentSet;
+		return set;
 	}
 	
 	public String toString() {

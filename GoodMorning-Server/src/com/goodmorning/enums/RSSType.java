@@ -3,7 +3,6 @@ package com.goodmorning.enums;
 public enum RSSType {
 	
 	NEWS("News"),
-	WEATHER("Weather"),
 	BUSINESS("Business"),
 	SCIENCE("Science"),
 	TECHNOLOGY("Technology"),

@@ -20,9 +20,9 @@ public class JSONResponse {
 
 	}
 	
-	public JSONResponse(Set<Task> taskSet) {
+	public JSONResponse(Set<?> set) {
 		Gson gsonObject = new Gson();
-		setJson(gsonObject.toJson(taskSet));	
+		setJson(gsonObject.toJson(set));	
 	}
 	
 	public JSONResponse(Failure object) {

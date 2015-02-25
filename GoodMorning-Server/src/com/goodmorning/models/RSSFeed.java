@@ -18,7 +18,7 @@ public class RSSFeed {
 	private String link;
 	private String description;
 	private String language;
-	private String copyright;
+	private String source;
 	private Timestamp pubDate;
 	private RSSType type;
 
@@ -26,15 +26,12 @@ public class RSSFeed {
 	private Timestamp lastActiveTimestamp;
 	private transient User user;
 
-	// Remove this from server, client side only
-	//private List<RSSMessage> entries = new ArrayList<RSSMessage>();
-
 	public RSSFeed() {
 		setTitle(Messages.UNKNOWN);
 		setLink(Messages.UNKNOWN);
 		setDescription(Messages.UNKNOWN);
 		setLanguage(Messages.UNKNOWN);
-		setCopyright(Messages.UNKNOWN);
+		setSource(Messages.UNKNOWN);
 		setType(RSSType.OTHER);
 		
 		// User is null when this is called
@@ -45,14 +42,15 @@ public class RSSFeed {
 		setLastActiveTimestamp(new Timestamp(now.getTimeInMillis()));
 	}
 	
-	public RSSFeed(String title, String link, String description, String language, String copyright, String pubDate, User user) {
+	public RSSFeed(String title, String link, RSSType type, String description, String language, String source, String pubDate, User user) {
 		setTitle(title);
 		setLink(link);
 		setDescription(description);
 		setLanguage(language);
-		setCopyright(copyright);
+		setSource(source);
 		setPubDateFromString(pubDate);
-		setType(RSSType.OTHER);
+		setType(type);
+		
 		setUser(user);
 		
 		Calendar now = Calendar.getInstance();
@@ -122,12 +120,12 @@ public class RSSFeed {
 		this.language = lang;
 	}
 
-	public String getCopyright() {
-		return copyright;
+	public String getSource() {
+		return source;
 	}
 	
-	public void setCopyright(String copyright) {
-		this.copyright = copyright;
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public Timestamp getPubDate() {
@@ -204,7 +202,7 @@ public class RSSFeed {
 	
 	@Override
 	public String toString() {
-		return "Feed [copyright=" + copyright + ", description=" + description
+		return "Feed [source=" + source + ", description=" + description
 				+ ", language=" + language + ", link=" + link + ", pubDate="
 				+ pubDate + ", title=" + title + "]";
 	}
