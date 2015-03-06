@@ -23,35 +23,49 @@
 			<result>index.jsp</result>
 		</action>
 
-		<action name="install" class="com.goodmorning.actions.CreateNewUser"
-			method="execute">
+		<!-- User API Calls -->
+		<action name="connectUser" class="com.goodmorning.actions.ConnectUser" method="execute">
+			<result name="response">response.jsp</result>
+		</action>
+		
+		<action name="uninstall" class="com.goodmorning.actions.DeleteUser" method="execute">
 			<result name="response">response.jsp</result>
 		</action>
 
-		<action name="newtask" class="com.goodmorning.actions.CreateNewTask"
-			method="execute">
+		<action name="install" class="com.goodmorning.actions.CreateNewUser" method="execute">
+			<result name="response">response.jsp</result>
+		</action>
+
+		<!-- Task API Calls -->
+		<action name="newtask" class="com.goodmorning.actions.CreateNewTask" method="execute">
 			<result name="response">response.jsp</result>	
 		</action>
 		
-		<action name="tasklist" class="com.goodmorning.actions.GetUserTasks"
-			method="execute">
+		<action name="deletetask" class="com.goodmorning.actions.DeleteTask" method="execute">
+			<result name="response">response.jsp</result>	
+		</action>
+		
+		<action name="updatetask" class="com.goodmorning.actions.UpdateTask" method="execute">
+			<result name="response">response.jsp</result>	
+		</action>
+		
+		<action name="tasklist" class="com.goodmorning.actions.GetUserTasks" method="execute">
 			<result name="response">response.jsp</result>
 		</action>
 		
-		<action name="newfeed" class="com.goodmorning.actions.CreateNewRSSFeed"
-			method="execute">
+		<!-- RSSFeed API Calls -->
+		<action name="newfeed" class="com.goodmorning.actions.CreateNewRSSFeed" method="execute">
 			<result name="response">response.jsp</result>	
 		</action>
 		
-		<action name="feedlist" class="com.goodmorning.actions.GetUserFeeds"
-			method="execute">
+		<action name="deletefeed" class="com.goodmorning.actions.DeleteRSSFeed" method="execute">
+			<result name="response">response.jsp</result>	
+		</action>
+		
+		<action name="feedlist" class="com.goodmorning.actions.GetUserFeeds" method="execute">
 			<result name="response">response.jsp</result>	
 		</action>
 
-		<action name="connectUser" class="com.goodmorning.actions.ConnectUser"
-			method="execute">
-			<result name="response">response.jsp</result>
-		</action>
 
 		<!-- <action name="updateUser" class="com.goodmorning.actions.UpdateUser" 
 			method="execute"> <result name="response">response.jsp</result> </action> 

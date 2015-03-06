@@ -144,5 +144,33 @@ public class HibernateRSSFeedManager extends HibernateDatabaseManager {
 			closeSession();
 		}
 	}
+	
+	public synchronized boolean delete(RSSFeed feed) { 
+		
+		Session session = null;
+		Transaction transaction = null;
+		boolean errorResult = false;
+		
+		try {
+			session = HibernateUtility.getCurrentSession();
+			transaction = session.beginTransaction();
+			session.delete(feed);
+			transaction.commit();
+			return true;
+		}
+		catch (HibernateException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_DELETE_RSSFEED, Messages.HIBERNATE_FAILED, exception);
+			return errorResult;
+		}	
+		catch (RuntimeException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_DELETE_RSSFEED, Messages.GENERIC_FAILED, exception);
+			return errorResult;
+		}
+		finally {
+			closeSession();
+		}
+	}
 
 }

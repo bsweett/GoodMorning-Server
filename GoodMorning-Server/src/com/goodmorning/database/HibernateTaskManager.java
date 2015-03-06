@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Task;
+import com.goodmorning.models.User;
 import com.goodmorning.util.Messages;
 import com.goodmorning.util.ServerLogger;
 
@@ -157,6 +158,46 @@ public class HibernateTaskManager extends HibernateDatabaseManager {
 		} finally {
 			closeSession();
 		}
+	}
+	
+
+	public synchronized boolean delete(Task task) { 
+		
+		Session session = null;
+		Transaction transaction = null;
+		boolean errorResult = false;
+		
+		try {
+			session = HibernateUtility.getCurrentSession();
+			transaction = session.beginTransaction();
+			session.delete(task);
+			transaction.commit();
+			return true;
+		}
+		catch (HibernateException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_DELETE_TASK, Messages.HIBERNATE_FAILED, exception);
+			return errorResult;
+		}	
+		catch (RuntimeException exception) {
+			rollback(transaction);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_DELETE_TASK, Messages.GENERIC_FAILED, exception);
+			return errorResult;
+		}
+		finally {
+			closeSession();
+		}
+	}
+	
+	/**
+	 * Updates given object (task).
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public synchronized boolean updateTask(Task task) {
+		boolean result = super.update(task);	
+		return result;
 	}
 
 }
