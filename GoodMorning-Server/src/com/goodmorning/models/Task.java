@@ -56,9 +56,9 @@ public class Task {
 		
 		setAlertTimeFromLocal(time);
 
-		DateTime today = time.toDateTimeToday();
-		today.plusDays(1);
-		setNextAlertTimestempFromLocalDate(today.toLocalDateTime());
+		//DateTime today = time.toDateTimeToday();
+		//today.plusDays(1);
+		setNextAlertTimestempFromLocalDate(time.toDateTimeToday().toLocalDateTime());
 		
 		setTaskType(taskType);
 		setSoundFileName(soundName);

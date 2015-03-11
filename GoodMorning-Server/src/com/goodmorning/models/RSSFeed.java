@@ -19,6 +19,7 @@ public class RSSFeed {
 	private String description;
 	private String language;
 	private String source;
+	private String logoUrl;
 	private Timestamp pubDate;
 	private RSSType type;
 
@@ -42,7 +43,7 @@ public class RSSFeed {
 		setLastActiveTimestamp(new Timestamp(now.getTimeInMillis()));
 	}
 	
-	public RSSFeed(String title, String link, RSSType type, String description, String language, String source, String pubDate, User user) {
+	public RSSFeed(String title, String link, RSSType type, String description, String language, String source, String pubDate, String logoUrl, User user) {
 		setTitle(title);
 		setLink(link);
 		setDescription(description);
@@ -50,6 +51,7 @@ public class RSSFeed {
 		setSource(source);
 		setPubDateFromString(pubDate);
 		setType(type);
+		setLogoUrl(logoUrl);
 		
 		setUser(user);
 		
@@ -168,6 +170,14 @@ public class RSSFeed {
 		this.lastActiveTimestamp = lastActiveTimestamp;
 	}
 	
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+
 	// TODO: test for alternate format
 	public String pubDateToString() {
 		
@@ -206,5 +216,4 @@ public class RSSFeed {
 				+ ", language=" + language + ", link=" + link + ", pubDate="
 				+ pubDate + ", title=" + title + "]";
 	}
-
 }

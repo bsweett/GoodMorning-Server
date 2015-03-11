@@ -23,7 +23,7 @@ public class HibernateRSSFeedManager extends HibernateDatabaseManager {
 	private final String CREATE_FEED_TABLE = "create table " + getTableName() + "(FEED_ID_PK char(36) primary key, TITLE tinytext,"
 			+ "CREATION_TIME timestamp, LAST_ACTIVE timestamp, LINK tinytext, DESCRIPTION tinytext,"
 			+ "RSS_TYPE enum('NEWS', 'BUSINESS', 'SCIENCE', 'TECHNOLOGY', 'SPORTS', 'LIFESTYLE', 'ENTERTAINMENT', 'OTHER')," 
-			+ "LANGUAGE tinytext, PUB_DATE timestamp, SOURCE tinytext, USER_ID_FK char(36));";
+			+ "LANGUAGE tinytext, PUB_DATE timestamp, SOURCE tinytext, LOGO_URL tinytext, USER_ID_FK char(36));";
 
 
 	private final String FEED_CLASS_NAME = "RSSFeed";

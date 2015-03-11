@@ -55,6 +55,10 @@
 		<property name="source" type="string">
 			<column name="SOURCE" sql-type="tinytext" not-null="true" />
 		</property>
+		
+		<property name="logoUrl" type="string">
+			<column name="LOGO_URL" sql-type="tinytext" not-null="true" />
+		</property>
 
         <!-- Many feeds's can be mapped to a single user. -->         
    		<many-to-one name="user" class="com.goodmorning.models.User" fetch="select" insert="false" update="false">

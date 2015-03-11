@@ -60,7 +60,7 @@ public class DeleteUser extends ActionSupport implements StrutsAction {
 			}
 
 		} catch (Exception e) {
-			ServerLogger.getDefault().severe(this, Messages.METHOD_DELETE_TASK, "error.DeleteTaskAction", e);
+			ServerLogger.getDefault().severe(this, Messages.METHOD_DELETE_USER, "error.DeleteUserAction", e);
 			fail = new Failure("Exception", e.getLocalizedMessage());
 			actionResponse = new JSONResponse(fail);
 			setResponse(actionResponse);

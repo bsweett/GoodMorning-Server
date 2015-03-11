@@ -12,6 +12,8 @@ public class GoodmorningServerSetup {
 		
 		HibernateRSSFeedManager rssManager = HibernateRSSFeedManager.getDefault();
 		rssManager.setupTable();
+		
+		System.exit(0);
 	}
 	
 }

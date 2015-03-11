@@ -34,7 +34,8 @@ public class CreateNewRSSFeed extends ActionSupport implements StrutsAction {
 	private final String parameter_5 = "link";
 	private final String parameter_6 = "description";
 	private final String parameter_7 = "source";
-	private final String parameter_8 = "lang";
+	private final String parameter_8 = "logo";
+	private final String parameter_9 = "lang";
 	
 	@Override
 	public String execute() throws Exception {
@@ -52,7 +53,8 @@ public class CreateNewRSSFeed extends ActionSupport implements StrutsAction {
 			String link = getServletRequest().getParameter(parameter_5);
 			String description = getServletRequest().getParameter(parameter_6);
 			String source = getServletRequest().getParameter(parameter_7);
-			String lang = getServletRequest().getParameter(parameter_8);
+			String logoUrl = getServletRequest().getParameter(parameter_8);
+			String lang = getServletRequest().getParameter(parameter_9);
 			
 			if(token.isEmpty() || title.isEmpty() || type == null || updated.isEmpty() || link.isEmpty() || source.isEmpty()) {
 				fail = new Failure("Invalid Request", "The request is missing parameters");
@@ -80,12 +82,12 @@ public class CreateNewRSSFeed extends ActionSupport implements StrutsAction {
 					feed = feedManager.getFeedBySource(source);
 
 					if(feed != null) {
-						fail = new Failure("Feed already exists", "A feed with the same source url already exists");
+						fail = new Failure("Feed already exists", "You are already subscribed to this feed");
 						setResponse(new JSONResponse(fail));
 						
 					} else {
 						//user.setLastActive(new Timestamp(now.getTimeInMillis()));
-						feed = new RSSFeed(title, link, type, description, lang, source, updated, user);
+						feed = new RSSFeed(title, link, type, description, lang, source, updated, logoUrl, user);
 						feed.setUser(user);
 						user.addRssFeed(feed);
 						

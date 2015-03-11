@@ -24,7 +24,7 @@
 		</action>
 
 		<!-- User API Calls -->
-		<action name="connectUser" class="com.goodmorning.actions.ConnectUser" method="execute">
+		<action name="connectuser" class="com.goodmorning.actions.ConnectUser" method="execute">
 			<result name="response">response.jsp</result>
 		</action>
 		
