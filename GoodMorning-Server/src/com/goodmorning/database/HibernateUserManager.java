@@ -191,7 +191,7 @@ public class HibernateUserManager extends HibernateDatabaseManager{
 				return null;
 			} else {
 				User user = users.get(0);
-				return decryptUser(user);
+				return user;
 			}
 		} catch (HibernateException exception) {
 			rollback(transaction);

@@ -52,6 +52,7 @@ public class ConnectUser extends ActionSupport implements StrutsAction {
 				// If they say no send un-install request and then install from fresh user
 				} else {
 					user.setLastActive(new Timestamp(now.getTimeInMillis()));
+					System.out.println(user.toString());
 					actionResponse = new JSONResponse(user);
 					setResponse(actionResponse);
 					

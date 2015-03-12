@@ -19,7 +19,7 @@ public class DeleteUser extends ActionSupport implements StrutsAction {
 	private HibernateUserManager userManager;
 
 	private final String parameter_1 = "token";
-	private final String parameter_2 = "deviceId";
+	private final String parameter_2 = "device";
 
 	@Override
 	public String execute() throws Exception {
