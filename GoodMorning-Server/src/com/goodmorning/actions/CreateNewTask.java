@@ -120,6 +120,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 
 		try {
 			task.setAlertTime(Utility.stringToTime(time));
+			task.updateNextAlertTime();
 		} catch (NullPointerException e) {
 			fail = new Failure("Exception", "Invalid time caused a null pointer");
 			return new JSONResponse(fail);

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
@@ -177,6 +178,22 @@ public class Task {
 	public void setSunday(boolean sunday) {
 		this.sunday = sunday;
 	}
+	
+	public boolean isNeverRepeated() {
+		if(!isSunday() && !isSaturday() && !isFriday() && !isThursday() && !isWednesday() && !isTuesday() && !isMonday()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isRepeatedEveryday() {
+		if(isSunday() && isSaturday() && isFriday() && isThursday() && isWednesday() && isTuesday() && isMonday()) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	public Timestamp getNextAlertTimestamp() {
 		return nextAlertTimestamp;
@@ -232,5 +249,82 @@ public class Task {
 
 	public void setSoundFileName(String soundFileName) {
 		this.soundFileName = soundFileName;
+	}
+
+	public void updateNextAlertTime() {
+		Timestamp oldAlertTime = getNextAlertTimestamp();
+		Calendar now = Calendar.getInstance();
+		Timestamp nowTime = new Timestamp(now.getTimeInMillis());
+		LocalTime timeToFire = getLocalAlertTime();
+		DateTime dtOrg = new DateTime(now);
+		
+		if(oldAlertTime.before(nowTime)) {
+			
+			// If its never repeated and already passed update the next alert till the next day
+			// This will only be used for alarms. Other tasks will never be alerted again
+			if(isRepeatedEveryday() || (isNeverRepeated() && getTaskType() == TaskType.ALARM)) {
+				DateTime dtPlusOne = dtOrg.plusDays(1);
+				dtPlusOne = dtPlusOne.withTime(timeToFire.getHourOfDay(), timeToFire.getMinuteOfHour(), 0, 0);
+				setNextAlertTimestempFromLocalDate(dtPlusOne.toLocalDateTime());
+			} else {
+				checkDayOfWeekForUpdate(dtOrg.toLocalDateTime(), timeToFire);
+			}
+		}
+	}
+	
+	private void checkDayOfWeekForUpdate(LocalDateTime now, LocalTime fireTime) {	
+		LocalDateTime mon = now.withDayOfWeek(DateTimeConstants.MONDAY);
+		mon = mon.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		LocalDateTime tues = now.withDayOfWeek(DateTimeConstants.TUESDAY);
+		tues = tues.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		LocalDateTime wed = now.withDayOfWeek(DateTimeConstants.WEDNESDAY);
+		wed = wed.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		LocalDateTime thu = now.withDayOfWeek(DateTimeConstants.THURSDAY);
+		thu = thu.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		LocalDateTime fri = now.withDayOfWeek(DateTimeConstants.FRIDAY);
+		fri = fri.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		LocalDateTime sat = now.withDayOfWeek(DateTimeConstants.SATURDAY);
+		sat = sat.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		LocalDateTime sun = now.withDayOfWeek(DateTimeConstants.SUNDAY);
+		sun = sun.withTime(fireTime.getHourOfDay(), fireTime.getMinuteOfHour(), 0, 0);
+		
+		if(isMonday() && now.isBefore(mon)) {
+			setNextAlertTimestempFromLocalDate(mon);
+		}  
+		
+		if(isTuesday() && now.isBefore(tues)) {
+			setNextAlertTimestempFromLocalDate(tues);
+		}
+		
+		if(isWednesday() && now.isBefore(wed))  {
+			setNextAlertTimestempFromLocalDate(wed);
+		}  
+		
+		if(isThursday() && now.isBefore(thu))  {
+			setNextAlertTimestempFromLocalDate(thu);
+		} 
+
+		if(isFriday() && now.isBefore(fri))  {
+			setNextAlertTimestempFromLocalDate(fri);
+		} 
+
+		if(isSaturday() && now.isBefore(sat))  {
+			setNextAlertTimestempFromLocalDate(sat);
+		} 
+
+		if(isSunday() && now.isBefore(sun))  {
+			setNextAlertTimestempFromLocalDate(sun);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private LocalDateTime calcNextPossibleDay(final LocalDateTime d, final int dayConstant) {
+		  return d.plusWeeks(d.getDayOfWeek() < dayConstant ? 0 : 1).withDayOfWeek(dayConstant);
 	}
 }
