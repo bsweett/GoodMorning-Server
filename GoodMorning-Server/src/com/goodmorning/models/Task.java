@@ -9,6 +9,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import com.goodmorning.enums.DeepLinkType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.util.Messages;
 
@@ -19,6 +20,7 @@ public class Task {
 	private Timestamp creationTimestamp;
 	private Timestamp nextAlertTimestamp;
 	private TaskType taskType;
+	private DeepLinkType deepLink;
 	private Time alertTime;
 	private String soundFileName;
 	private boolean monday;
@@ -45,6 +47,7 @@ public class Task {
 		setSoundFileName(Messages.UNKNOWN);
 		initAllDays(false);
 		setNotes(Messages.UNKNOWN);
+		setDeepLink(DeepLinkType.NONE);
 	}
 	
 	public Task(TaskType taskType, String soundName, String name, LocalTime time, User user) {
@@ -65,6 +68,7 @@ public class Task {
 		setSoundFileName(soundName);
 		initAllDays(false);
 		setNotes("");
+		setDeepLink(DeepLinkType.NONE);
 		
 		System.out.println("completed init");
 	}
@@ -101,6 +105,14 @@ public class Task {
 
 	public void setTaskType(TaskType taskType) {
 		this.taskType = taskType;
+	}
+
+	public DeepLinkType getDeepLink() {
+		return deepLink;
+	}
+
+	public void setDeepLink(DeepLinkType deepLink) {
+		this.deepLink = deepLink;
 	}
 
 	public Time getAlertTime() {

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.goodmorning.database.HibernateTaskManager;
 import com.goodmorning.database.HibernateUserManager;
+import com.goodmorning.enums.DeepLinkType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Failure;
 import com.goodmorning.models.JSONResponse;
@@ -35,6 +36,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 	private final String parameter_4 = "notes";	// Limit to 140 characters
 	private final String parameter_5 = "type";
 	private final String parameter_6 = "name";
+	private final String parameter_7 = "link";
 
 	@Override
 	public String execute() throws Exception {
@@ -52,8 +54,9 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 			String notes = getServletRequest().getParameter(parameter_4);
 			TaskType type = TaskType.fromString(getServletRequest().getParameter(parameter_5));
 			String name = getServletRequest().getParameter(parameter_6);
+			DeepLinkType deepLink = DeepLinkType.fromString(getServletRequest().getParameter(parameter_7));
 
-			if(token.isEmpty() || time.isEmpty() || days.isEmpty() || type == null || name.isEmpty()) {
+			if(token.isEmpty() || time.isEmpty() || days.isEmpty() || type == null || name.isEmpty() || deepLink == null) {
 				fail = new Failure("Invalid Request", "The request is missing parameters");
 				actionResponse = new JSONResponse(fail);
 				setResponse(actionResponse);
@@ -76,7 +79,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 
 					user.setLastActive(new Timestamp(now.getTimeInMillis()));
 					System.out.println("User: " + user.toString());
-					actionResponse = buildResponseCreateTaskForUser(user, time, days, notes, type, name);
+					actionResponse = buildResponseCreateTaskForUser(user, time, days, notes, type, name, deepLink);
 					setResponse(actionResponse);
 
 				}
@@ -92,7 +95,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 		return "response";
 	}
 
-	private JSONResponse buildResponseCreateTaskForUser(User user, String time, String days, String notes, TaskType type, String name) {
+	private JSONResponse buildResponseCreateTaskForUser(User user, String time, String days, String notes, TaskType type, String name, DeepLinkType deepLink) {
 		Task task;
 		Failure fail;
 
@@ -108,6 +111,7 @@ public class CreateNewTask extends ActionSupport implements StrutsAction {
 		task.setName(name);
 		task.setNotes(notes);
 		task.setTaskType(type);
+		task.setDeepLink(deepLink);
 
 		ArrayList<Boolean> DoTW = Utility.splitDaysString(days);
 		task.setMonday(DoTW.get(0));

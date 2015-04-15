@@ -33,6 +33,12 @@
       			<param name="enumClass">com.goodmorning.enums.TaskType</param>
     		</type>       
   		</property>
+  		
+  		<property name="deepLink" column="DEEP_LINK" update="true" insert="true" index="true">
+    		<type name="com.goodmorning.enums.HibernateVarCharEnum">
+      			<param name="enumClass">com.goodmorning.enums.DeepLinkType</param>
+    		</type>       
+  		</property>
         
         <property name="alertTime" type="time">
         	<column name="ALERT_TIME" sql-type="time" not-null="true" />

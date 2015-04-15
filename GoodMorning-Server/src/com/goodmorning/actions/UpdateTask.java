@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.goodmorning.database.HibernateTaskManager;
 import com.goodmorning.database.HibernateUserManager;
+import com.goodmorning.enums.DeepLinkType;
 import com.goodmorning.enums.TaskType;
 import com.goodmorning.models.Failure;
 import com.goodmorning.models.JSONResponse;
@@ -34,6 +35,7 @@ public class UpdateTask extends ActionSupport implements StrutsAction {
 	private final String parameter_5 = "notes";	// Limit to 140 characters
 	private final String parameter_6 = "type";
 	private final String parameter_7 = "name";
+	private final String parameter_8 = "link";
 
 	
 	// TODO: Test User Task Update
@@ -55,6 +57,7 @@ public class UpdateTask extends ActionSupport implements StrutsAction {
 			String notes = getServletRequest().getParameter(parameter_5);
 			TaskType type = TaskType.fromString(getServletRequest().getParameter(parameter_6));
 			String name = getServletRequest().getParameter(parameter_7);
+			DeepLinkType deepLink = DeepLinkType.fromString(getServletRequest().getParameter(parameter_8));
 
 			if(token.isEmpty() || taskId.isEmpty() || time.isEmpty() || days.isEmpty() || type == null || name.isEmpty()) {
 				fail = new Failure("Invalid Request", "The request is missing parameters");
@@ -92,7 +95,7 @@ public class UpdateTask extends ActionSupport implements StrutsAction {
 						user.setLastActive(new Timestamp(now.getTimeInMillis()));
 						System.out.println("User: " + user.toString());
 						
-						actionResponse = buildResponseCreateTaskForUser(user, task, time, days, notes, type, name);
+						actionResponse = buildResponseCreateTaskForUser(user, task, time, days, notes, type, name, deepLink);
 						setResponse(actionResponse);
 						
 					}
@@ -109,12 +112,13 @@ public class UpdateTask extends ActionSupport implements StrutsAction {
 		return "response";
 	}
 
-	private JSONResponse buildResponseCreateTaskForUser(User user, Task task, String time, String days, String notes, TaskType type, String name) {
+	private JSONResponse buildResponseCreateTaskForUser(User user, Task task, String time, String days, String notes, TaskType type, String name, DeepLinkType deepLink) {
 		Failure fail;
 
 		task.setName(name);
 		task.setNotes(notes);
 		task.setTaskType(type);
+		task.setDeepLink(deepLink);
 
 		ArrayList<Boolean> DoTW = Utility.splitDaysString(days);
 		task.setMonday(DoTW.get(0));
